@@ -1,7 +1,7 @@
 {
     "version":            "1",
     "project_name":       "Hammer",
-    "project_version":    "9fc7d22-dirty",
+    "project_version":    "7e0f4da-dirty",
     "project_path":       "C:/Users/81807/Hammer",
     "idf_path":           "C:/Users/81807/esp/esp-idf",
     "build_dir":          "C:/Users/81807/Hammer/build",
@@ -790,7 +790,7 @@
             "managed_reqs": [],
             "managed_priv_reqs": [],
             "file": "C:/Users/81807/Hammer/build/esp-idf/main/libmain.a",
-            "sources": [ "C:/Users/81807/Hammer/main/main.cpp" ],
+            "sources": [ "C:/Users/81807/Hammer/main/main.cpp", "C:/Users/81807/Hammer/main/adachi.cpp", "C:/Users/81807/Hammer/main/adc.cpp", "C:/Users/81807/Hammer/main/AS5047P.cpp", "C:/Users/81807/Hammer/main/buzzer.cpp", "C:/Users/81807/Hammer/main/fast.cpp", "C:/Users/81807/Hammer/main/interrupt.cpp", "C:/Users/81807/Hammer/main/log.cpp", "C:/Users/81807/Hammer/main/micromouse.cpp", "C:/Users/81807/Hammer/main/motion.cpp", "C:/Users/81807/Hammer/main/motor.cpp", "C:/Users/81807/Hammer/main/MPU6500.cpp", "C:/Users/81807/Hammer/main/PCA9632.cpp", "C:/Users/81807/Hammer/main/search.cpp", "C:/Users/81807/Hammer/main/test.cpp" ],
             "include_dirs": [ ".", "include" ]
         },
         "mbedtls": {

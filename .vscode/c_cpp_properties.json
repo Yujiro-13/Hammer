@@ -7,7 +7,8 @@
                 "${config:idf.espIdfPathWin}/components/**",
                 "${config:idf.espAdfPath}/components/**",
                 "${config:idf.espAdfPathWin}/components/**",
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/main/include/**"
             ],
             "browse": {
                 "path": [
@@ -19,7 +20,8 @@
                 ],
                 "limitSymbolsToIncludedHeaders": false
             },
-            "compileCommands": "${workspaceFolder}/build/compile_commands.json"
+            "compileCommands": "${workspaceFolder}/build/compile_commands.json",
+            "compilerPath": "C:\\Users\\81807\\.espressif\\tools\\xtensa-esp32s3-elf\\esp-12.2.0_20230208\\xtensa-esp32s3-elf\\bin\\xtensa-esp32s3-elf-gcc.exe"
         }
     ],
     "version": 4

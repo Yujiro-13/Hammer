@@ -5,5 +5,19 @@ set(COMPONENT_ADD_INCLUDEDIRS
 )
 set(COMPONENT_SRCS 
     "main.cpp"
+    "adachi.cpp"
+    "adc.cpp"
+    "AS5047P.cpp"
+    "buzzer.cpp"
+    "fast.cpp"
+    "interrupt.cpp"
+    "log.cpp"
+    "micromouse.cpp"
+    "motion.cpp"
+    "motor.cpp"
+    "MPU6500.cpp"
+    "PCA9632.cpp"
+    "search.cpp"
+    "test.cpp"
    )
 register_component()
