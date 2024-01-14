@@ -1,12 +1,12 @@
 #include "include/Driver/adc.hpp"
-//#include <rom/ets_sys.h>
+#include <rom/ets_sys.h>
 
-//adc_oneshot_unit_handle_t adc1;
+adc_oneshot_unit_handle_t adc1;
 
 // ADCのピン、チャンネルは構造体でそれぞれまとめたので、一括でクラス内で宣言したインスタンスに渡す
 ADC::ADC(IRLED_FR &led_fr, IRLED_FL &led_fl, IRLED_R &led_r, IRLED_L &led_l, adc_channel_t VBATT) : led_FR(led_fr), led_FL(led_fl), led_R(led_r), led_L(led_l)
 {
-    /*adc_oneshot_unit_init_cfg_t adc1_init = {};
+    adc_oneshot_unit_init_cfg_t adc1_init = {};
     adc1_init.unit_id = ADC_UNIT_1;
 
     ESP_ERROR_CHECK(adc_oneshot_new_unit(&adc1_init, &adc1));
@@ -23,14 +23,11 @@ ADC::ADC(IRLED_FR &led_fr, IRLED_FL &led_fl, IRLED_R &led_r, IRLED_L &led_l, adc
     gpio_config_t ir_conf = {};
     ir_conf.mode = GPIO_MODE_OUTPUT;
     ir_conf.pin_bit_mask = (1ULL << led_FR.pin) | (1ULL << led_FL.pin) | (1ULL << led_R.pin) | (1ULL << led_L.pin);
-    ESP_ERROR_CHECK(gpio_config(&ir_conf));*/
+    ESP_ERROR_CHECK(gpio_config(&ir_conf));
     SetIRLED(0b0000);
 }
 
-ADC::~ADC()
-{
-    //adc_oneshot_delete(adc1);
-}
+ADC::~ADC(){}
 
 float ADC::BatteryVoltage()
 {
@@ -41,7 +38,7 @@ float ADC::BatteryVoltage()
 
 void ADC::ReadSensor(int *sensors, uint8_t mask)
 {
-    /*if (mask & 1)
+    if (mask & 1)
         ESP_ERROR_CHECK(adc_oneshot_read(adc1, led_FL.channel, &sensors[0]));
     if ((mask >> 1) & 1)
         ESP_ERROR_CHECK(adc_oneshot_read(adc1, led_L.channel, &sensors[1]));
@@ -49,16 +46,16 @@ void ADC::ReadSensor(int *sensors, uint8_t mask)
         ESP_ERROR_CHECK(adc_oneshot_read(adc1, led_R.channel, &sensors[2]));
     if ((mask >> 3) & 1)
         ESP_ERROR_CHECK(adc_oneshot_read(adc1, led_FR.channel, &sensors[3]));
-        */
+        
 }
 
 void ADC::SetIRLED(uint8_t led)
 {
-    /*gpio_set_level(led_FR.pin, led & 1);
+    gpio_set_level(led_FR.pin, led & 1);
     gpio_set_level(led_R.pin, (led >> 1) & 1);
     gpio_set_level(led_L.pin, (led >> 2) & 1);
     gpio_set_level(led_FL.pin, (led >> 3) & 1);
-    */
+    
 }
 
 void ADC::WallSensor()

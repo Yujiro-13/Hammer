@@ -3,7 +3,7 @@
 PCA9632::PCA9632(i2c_port_t port, uint8_t adrs){
     
     // バスの初期化
-    /*memset(&i2c_conf, 0, sizeof(i2c_conf));
+    memset(&i2c_conf, 0, sizeof(i2c_conf));
     i2c_conf.mode = I2C_MODE_MASTER;
     i2c_conf.sda_io_num = LED_SDA;
     i2c_conf.scl_io_num = LED_SCL;
@@ -15,7 +15,7 @@ PCA9632::PCA9632(i2c_port_t port, uint8_t adrs){
     ret = i2c_param_config(I2C_NUM_0, &i2c_conf);
     ESP_ERROR_CHECK(ret);
     ret = i2c_driver_install(I2C_NUM_0, I2C_MODE_MASTER, 0, 0, 0);
-    ESP_ERROR_CHECK(ret);*/
+    ESP_ERROR_CHECK(ret);
 
     // デバイスの設定
     _port = port;
@@ -29,8 +29,8 @@ uint8_t PCA9632::read(uint8_t reg){
     esp_err_t err;
     uint8_t data;
 
-    //err = i2c_master_write_read_device(_port,_adrs,&reg,1,&data,1,10/portTICK_PERIOD_MS);
-    //ESP_ERROR_CHECK(err);
+    err = i2c_master_write_read_device(_port,_adrs,&reg,1,&data,1,10/portTICK_PERIOD_MS);
+    ESP_ERROR_CHECK(err);
     return data;
 }
 
@@ -38,8 +38,8 @@ esp_err_t PCA9632::write(uint8_t reg,uint8_t data){
     esp_err_t err;
     uint8_t send[2] = {reg,data};
 
-    //err = i2c_master_write_to_device(_port,_adrs,send,2,10/portTICK_PERIOD_MS);
-    //ESP_ERROR_CHECK(err);
+    err = i2c_master_write_to_device(_port,_adrs,send,2,10/portTICK_PERIOD_MS);
+    ESP_ERROR_CHECK(err);
     return err;
 }
 
@@ -64,7 +64,7 @@ void PCA9632::blink(){
         }
 
         printf("led : %d\n",led);
-        //vTaskDelay(50/portTICK_PERIOD_MS);
+        vTaskDelay(50/portTICK_PERIOD_MS);
     }
 }
 

@@ -22,7 +22,7 @@ public:
     void freq(uint32_t freq);
     void volume(uint32_t duty);
     void stop();
-    void play();
+    //void play();
     //void music(enum melody m);
 
 private:

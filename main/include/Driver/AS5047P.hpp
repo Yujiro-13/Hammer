@@ -27,6 +27,7 @@ public:
 private:
     uint8_t CalcParity(uint16_t data);
     uint16_t read16(uint16_t reg);
+    esp_err_t ret;
     esp_err_t err;
     spi_transaction_t cmd;
     spi_device_handle_t _spi;

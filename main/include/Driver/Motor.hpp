@@ -8,6 +8,7 @@
 #include "freertos/task.h"
 #include <math.h>
 #include "../structs.hpp"
+#include "peripheral.hpp"
 
 
 class Motor
@@ -17,6 +18,10 @@ public:
     ~Motor();
     void setMotorSpeed(float spdR, float spdL, float fan);
     void sincurve();
+private:
+    float spdR,spdL;
+    float fan;
+    float t = 0;
 };
 
 #endif

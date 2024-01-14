@@ -7,6 +7,8 @@
 #include <string>
 #include "driver/gpio.h"
 #include "driver/i2c.h"
+#include "driver/ledc.h"
+#include "esp_adc/adc_oneshot.h"
 #include "driver/spi_master.h"
 #include "soc/gpio_struct.h"
 #include "sdkconfig.h"

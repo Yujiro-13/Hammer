@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <math.h>
+#include <cstring>
 #include "../structs.hpp"
 #include "peripheral.hpp"
 
@@ -22,6 +23,8 @@ public:
 
 private:
     bool _init = false;
+    esp_err_t ret;
+    i2c_config_t i2c_conf;
     i2c_port_t _port;
     uint8_t _adrs;
     uint8_t read(uint8_t reg);

@@ -25,8 +25,9 @@ private:
     float BatteryVoltage();
     void ReadSensor(int* sensors,uint8_t mask);
     void WallSensor();
-    IRLED_FL led_FL;
+
     IRLED_FR led_FR;
+    IRLED_FL led_FL;
     IRLED_R led_R;
     IRLED_L led_L;
 

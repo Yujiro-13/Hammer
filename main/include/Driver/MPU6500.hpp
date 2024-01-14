@@ -45,6 +45,7 @@ public:
 private:
     spi_device_handle_t _spi;
     spi_bus_config_t bus_imu;
+    esp_err_t ret;
     esp_err_t err;
     spi_device_interface_config_t dev_imu;
     uint8_t whoami();
