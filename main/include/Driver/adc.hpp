@@ -17,6 +17,7 @@ public:
     ~ADC();
 
     void GetData(t_sens_data *_sens) override;
+    void adc_loop();
 
 private:
     int before[4];
@@ -35,5 +36,7 @@ private:
     t_sens_data *sens;
     
 };
+
+extern ADC adc;
 
 #endif

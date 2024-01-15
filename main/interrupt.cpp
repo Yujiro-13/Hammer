@@ -333,7 +333,7 @@ void Interrupt::reset_I_gain()
     return;
 }
 
-void Interrupt::interrupt(void *pvparam)
+void Interrupt::interrupt()
 { //  xtaskcreate
 
     while (1)
@@ -352,3 +352,4 @@ void Interrupt::interrupt(void *pvparam)
         //vTaskDelay(1);
     }
 }
+

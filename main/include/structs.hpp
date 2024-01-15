@@ -96,6 +96,7 @@ typedef struct
     t_wall_sens wall;
     t_gyro gyro;
     t_enc enc;
+    float BatteryVoltage = 0;
 }t_sens_data;   //sensor data
 
 typedef struct

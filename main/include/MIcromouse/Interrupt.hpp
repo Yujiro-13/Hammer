@@ -11,7 +11,7 @@ class Interrupt : public Micromouse{
     public:
         Interrupt();
         ~Interrupt();
-        void interrupt(void *pvparam);
+        void interrupt();
         void ptr_by_sensor(t_sens_data *sens) override;
         void ptr_by_motion(t_mouse_motion_val *val) override;
         void ptr_by_control(t_control *control) override;
@@ -45,6 +45,10 @@ class Interrupt : public Micromouse{
 
 
 };
+
+extern Interrupt interrupt;
+
+
 
 
 

@@ -27,6 +27,8 @@ Interface Micromouse
     virtual void set_module(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot) = 0;
 };
 
+
+
 void MICROMOUSE();
 
 

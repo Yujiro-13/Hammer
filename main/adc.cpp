@@ -83,3 +83,13 @@ void ADC::GetData(t_sens_data *_sens) // オーバーライドしているから
 {
     sens = _sens;
 }
+
+void ADC::adc_loop()
+{
+    while (1)
+    {
+        WallSensor();
+        sens->BatteryVoltage = BatteryVoltage();
+        vTaskDelay(1 / portTICK_PERIOD_MS);
+    }
+}

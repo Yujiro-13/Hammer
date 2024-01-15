@@ -8,7 +8,20 @@
 #include "include/Micromouse/Motion/motion.hpp"
 #include "include/Micromouse/Motion/adachi.hpp"
 
+IRLED_FR LED_FR;
+IRLED_FL LED_FL;
+IRLED_R LED_R;
+IRLED_L LED_L;
 std::vector<std::shared_ptr<UI>> ui;
+Interrupt interrupt;
+/* モジュールクラスのインスタンス生成と初期化 */
+ADC adc(LED_FR, LED_FL, LED_R, LED_L, VBATT_CHANNEL);
+AS5047P enc_R(SPI3_HOST, ENC_CS_R);
+AS5047P enc_L(SPI3_HOST, ENC_CS_L);
+BUZZER buzzer(BUZZER_CH, BUZZER_TIMER, BUZZER_PIN);
+MPU6500 imu(SPI2_HOST, IMU_CS);
+PCA9632 led(I2C_NUM_0, LED_ADRS);
+Motor motor(BDC_R_MCPWM_GPIO_PH, BDC_R_MCPWM_GPIO_EN, BDC_L_MCPWM_GPIO_PH, BDC_L_MCPWM_GPIO_EN, FAN_PIN);
 
 void MICROMOUSE();
 void set_interface();
@@ -20,21 +33,8 @@ void mode_select(uint8_t *_mode_num, t_sens_data *sens, t_mouse_motion_val *val,
 
 void MICROMOUSE()
 {
-    IRLED_FR LED_FR;
-    IRLED_FL LED_FL;
-    IRLED_R LED_R;
-    IRLED_L LED_L;
 
     printf("finish IRLED\n");
-
-    /* モジュールクラスのインスタンス生成と初期化 */
-    ADC adc(LED_FR, LED_FL, LED_R, LED_L, VBATT_CHANNEL);
-    AS5047P enc_R(SPI3_HOST, ENC_CS_R);
-    AS5047P enc_L(SPI3_HOST, ENC_CS_L);
-    BUZZER buzzer(BUZZER_CH, BUZZER_TIMER, BUZZER_PIN);
-    MPU6500 imu(SPI2_HOST, IMU_CS);
-    PCA9632 led(I2C_NUM_0, LED_ADRS);
-    Motor motor(BDC_R_MCPWM_GPIO_PH, BDC_R_MCPWM_GPIO_EN, BDC_L_MCPWM_GPIO_PH, BDC_L_MCPWM_GPIO_EN, FAN_PIN);
 
     printf("finish module\n");
 
@@ -46,7 +46,6 @@ void MICROMOUSE()
 
     printf("finish struct\n");
 
-    Interrupt interrupt;
     uint8_t mode = 0;
     const int MODE_MAX = 0b0111;
     const int MODE_MIN = 0;
@@ -54,6 +53,7 @@ void MICROMOUSE()
     /* ポインタの設定・構造体の共有 */
 
     // 制御系
+
     interrupt.set_module(adc, enc_R, enc_L, buzzer, imu, led, motor);
     interrupt.ptr_by_sensor(&sens);
     interrupt.ptr_by_motion(&val);
@@ -77,26 +77,14 @@ void MICROMOUSE()
     enc_R.GetData(&sens);
     enc_L.GetData(&sens);
 
-    printf("mode: ");
-    scanf("%hhd", &mode);
+    // タスク優先順位 1 ~ 25
+    xTaskCreatePinnedToCore([](void *)
+                            { interrupt.interrupt(); },
+                            "interrupt", 8192, NULL, configMAX_PRIORITIES, NULL, PRO_CPU_NUM);
+    xTaskCreatePinnedToCore([](void*){adc.adc_loop();}, "WallSensor", 8192, NULL, configMAX_PRIORITIES - 1, NULL, PRO_CPU_NUM);
 
     while (1)
     {
-        printf("Enter mode: ");
-        scanf("%hhd", &mode);
-        printf("\n");
-
-        printf("Enter sens.wall.val.fl: ");
-        scanf("%d", &sens.wall.val.fl);
-
-        printf("Enter sens.wall.val.l: ");
-        scanf("%d", &sens.wall.val.l);
-
-        printf("Enter sens.wall.val.r: ");
-        scanf("%d", &sens.wall.val.r);
-
-        printf("Enter sens.wall.val.fr: ");
-        scanf("%d", &sens.wall.val.fr);
 
         led.set(mode + 1);
         if (sens.wall.val.fl + sens.wall.val.l + sens.wall.val.r + sens.wall.val.fr > 3000)
