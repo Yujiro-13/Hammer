@@ -4,13 +4,14 @@
 #include <iostream>
 #include <vector>
 #include <memory>
-//#include "structs.hpp"
+#include "../structs.hpp"
 #include "../Driver/adc.hpp"
 #include "../Driver/AS5047P.hpp"
 #include "../Driver/Buzzer.hpp"
 #include "../Driver/MPU6500.hpp"
 #include "../Driver/PCA9632.hpp"
 #include "../Driver/Motor.hpp"
+//#include "../MIcromouse/Motion/adachi.hpp"
 
 
 

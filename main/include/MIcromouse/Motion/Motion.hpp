@@ -16,10 +16,14 @@ class Motion : Micromouse
         void ptr_by_map(t_map *map) override;
         void set_module(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot) override;
         void run();
-        void turn();
+        void run_half();
+        void turn_left();
+        void turn_right();
+        void turn_half();
         void stop();
         void back();
         void slalom();
+        void check_enkaigei();
     protected:
         t_sens_data *sens;   // 後でexternの方を消し、こっちに書き換える。ここは、privateかprotected要検討
         t_mouse_motion_val *val;

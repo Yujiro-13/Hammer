@@ -4,7 +4,7 @@
 #define MMPP TIRE_DIAMETER *M_PI / ENC_MAX
 // float _accel = 0.0;
 
-Interrupt::Interrupt() { std::cout << "Interrupt" << std::endl; }
+Interrupt::Interrupt() { /*std::cout << "Interrupt" << std::endl;*/ }
 
 Interrupt::~Interrupt() { std::cout << "~Interrupt" << std::endl; }
 
@@ -58,7 +58,7 @@ void Interrupt::calc_target()
     std::cout << "val->current.acc : " << val->current.acc << std::endl;
     std::cout << "calc_target" << std::endl;*/
 
-    val->tar.vel += (val->current.acc) / 1000.0;
+    val->tar.vel += (val->tar.acc) / 1000.0;
 
     if (val->tar.vel > val->max.vel)
     {
@@ -74,7 +74,7 @@ void Interrupt::calc_target()
     std::cout << "val->max.ang_vel : " << val->max.ang_vel << std::endl;
     std::cout << "val->current.ang_acc : " << val->current.ang_acc << std::endl;*/
 
-    val->tar.ang_vel += (val->current.ang_acc) / 1000.0;
+    val->tar.ang_vel += (val->tar.ang_acc) / 1000.0;
 
     if (val->current.flag == LEFT)
     {
@@ -245,7 +245,7 @@ void Interrupt::calc_distance()
     // エンコーダの値を取得
     //sens->enc.data.l = -result.Angle_L;
     //sens->enc.data.r = result.Angle_R;
-    sens->enc.data.l = encL->readAngle();
+    sens->enc.data.l = -encL->readAngle();
     sens->enc.data.r = encR->readAngle();
 
     sens->enc.locate.l = sens->enc.data.l;

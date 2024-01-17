@@ -37,6 +37,6 @@ private:
     
 };
 
-extern ADC adc;
+//extern ADC adc;
 
 #endif

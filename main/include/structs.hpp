@@ -130,6 +130,7 @@ typedef struct
     float acc = 0;  //acceleration
     float ang_acc = 0;  //angular acceleration
     float len = 0;   //length
+    float len_half = 0; //length half
     float wall_val = 0; //wall value
     float wall_error = 0;   //wall error
     float alpha = 0;    //相補フィルタ用
@@ -216,28 +217,6 @@ typedef struct
     unsigned char size[32][32];
 }t_map;     //map data
 
-
-
-
-
-
-
-//extern t_bool flag;
-//extern t_local_dir l_dir;
-//extern t_sens_dir s_dir;
-//extern t_wall_sens sens.wall;
-//extern t_gyro gyro;
-//extern t_enc enc;
-//extern t_sens_data sens;
-//extern t_motion motion;
-//extern t_mouse_motion_val m_val;
-//extern t_motor mot;
-//extern t_pid pid;
-//extern t_control ctl;
-//extern t_wall wall;
-//extern t_map map;
-//extern t_pos mypos;
-//extern t_odom odom;
 
 
 #endif // STRUCTS_HPP

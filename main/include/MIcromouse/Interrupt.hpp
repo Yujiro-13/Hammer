@@ -46,7 +46,7 @@ class Interrupt : public Micromouse{
 
 };
 
-extern Interrupt interrupt;
+//extern Interrupt interrupt;
 
 
 

@@ -10,8 +10,11 @@ void Search::ptr_by_map(t_map *_map) { map = _map; }
 
 void Search::set_module(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot){}
 
+void Search::ref_by_motion(Adachi &_adachi) { motion = _adachi;}
+
 void Search::main_task()
 {
+    motion.search_adachi(3,3);
     std::cout << "Search" << std::endl;
 }
 
@@ -25,7 +28,10 @@ void All_Search::ptr_by_map(t_map *_map) { map = _map; }
 
 void All_Search::set_module(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot){}
 
+void All_Search::ref_by_motion(Adachi &_adachi) { motion = _adachi;}
+
 void All_Search::main_task()
 {
+    motion.search_adachi(5,5);
     std::cout << "All_Search" << std::endl;
 }

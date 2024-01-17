@@ -331,17 +331,17 @@ void Adachi::search_adachi(int gx, int gy)
 		break;
 
 	case RIGHT:
-		//turn_right();
+		turn_right();
 		//printf("turn_right\n");
 		break;
 
 	case LEFT:
-		//turn_left();
+		turn_left();
 		//printf("turn_left\n");
 		break;
 
 	case REAR:
-		//turn_half();
+		turn_half();
 		//printf("turn_half\n");
 		break;
 	}
@@ -383,22 +383,22 @@ void Adachi::search_adachi(int gx, int gy)
 
 		case RIGHT:
 			stop();
-			//turn_right();
-			//run_half();
+			turn_right();
+			run_half();
 			//printf("turn_right\n");
 			break;
 
 		case LEFT:
 			stop();
-			//turn_left();
-			//run_half();
+			turn_left();
+			run_half();
 			//printf("turn_left\n");
 			break;
 
 		case REAR:
 			stop();
-			//turn_half();
-			//run_half();
+			turn_half();
+			run_half();
 			//printf("turn_half\n");
 			break;
 		}
@@ -430,7 +430,7 @@ void Adachi::search_adachi(int gx, int gy)
 
 	stop();
 	//("stop\n");
-	//turn_half();
+	turn_half();
 	//printf("turn_half\n");
 }
 

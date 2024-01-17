@@ -25,7 +25,7 @@ BUZZER::BUZZER(ledc_channel_t channel, ledc_timer_t timer, gpio_num_t pin){
     ledc_channel.duty           = 512; // Set duty to 0%
     ledc_channel.hpoint         = 0;
 
-    //ESP_ERROR_CHECK(ledc_channel_config(&ledc_channel));
+    ESP_ERROR_CHECK(ledc_channel_config(&ledc_channel));
 }
 BUZZER::~BUZZER(){}
 
