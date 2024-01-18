@@ -25,6 +25,8 @@ ADC::ADC(IRLED_FR &led_fr, IRLED_FL &led_fl, IRLED_R &led_r, IRLED_L &led_l, adc
     ir_conf.pin_bit_mask = (1ULL << led_FR.pin) | (1ULL << led_FL.pin) | (1ULL << led_R.pin) | (1ULL << led_L.pin);
     ESP_ERROR_CHECK(gpio_config(&ir_conf));
     SetIRLED(0b0000);
+
+    printf("ADC init\n");
 }
 
 ADC::~ADC(){}

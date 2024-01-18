@@ -1,9 +1,9 @@
 {
-    "write_flash_args" : [ "--flash_mode", "dout",
+    "write_flash_args" : [ "--flash_mode", "dio",
                            "--flash_size", "2MB",
                            "--flash_freq", "80m" ],
     "flash_settings" : {
-        "flash_mode": "dout",
+        "flash_mode": "dio",
         "flash_size": "2MB",
         "flash_freq": "80m"
     },

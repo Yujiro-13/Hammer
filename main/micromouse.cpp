@@ -9,7 +9,7 @@
 
 std::vector<std::shared_ptr<UI>> ui;
 
-void MICROMOUSE();
+void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU6500 &imu, PCA9632 &led, Motor &motor, Interrupt &interrupt);
 void set_interface();
 void call_task(UI *task, Adachi &motion);
 void set_param(Micromouse *task, t_sens_data *_sen, t_mouse_motion_val *_val, t_control *_control, t_map *_map);
@@ -17,41 +17,26 @@ void mode_select(uint8_t *_mode_num, Adachi &adachi, t_sens_data *sens, t_mouse_
 
 /* 基本的に全ての処理のをここにまとめ、mainで呼び出す。 */
 
-void myTaskInterrupt(void *pvpram)
+
+
+void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU6500 &imu, PCA9632 &led, Motor &motor, Interrupt &interrupt)
 {
-    Interrupt *interrupt = static_cast<Interrupt *>(pvpram);
-    interrupt->interrupt();
-}
 
-void myTaskAdc(void *pvpram)
-{
-    ADC *adc = static_cast<ADC *>(pvpram);
-    adc->adc_loop();
-}
+    //printf("start MICROMOUSE\n");
 
-void MICROMOUSE()
-{
-    IRLED_FR LED_FR;
-    IRLED_FL LED_FL;
-    IRLED_R LED_R;
-    IRLED_L LED_L;
+    //printf("finish IRLED\n");
 
-    Interrupt interrupt;
+    
 
-    /* モジュールクラスのインスタンス生成と初期化 */
-    ADC adc(LED_FR, LED_FL, LED_R, LED_L, VBATT_CHANNEL);
-    AS5047P enc_R(SPI3_HOST, ENC_CS_R);
-    AS5047P enc_L(SPI3_HOST, ENC_CS_L);
-    BUZZER buzzer(BUZZER_CH, BUZZER_TIMER, BUZZER_PIN);
-    MPU6500 imu(SPI2_HOST, IMU_CS);
-    PCA9632 led(I2C_NUM_0, LED_ADRS);
-    Motor motor(BDC_R_MCPWM_GPIO_PH, BDC_R_MCPWM_GPIO_EN, BDC_L_MCPWM_GPIO_PH, BDC_L_MCPWM_GPIO_EN, FAN_PIN);
+    printf("finish module\n");
 
     /* 構造体のインスタンス生成 */
     t_sens_data sens;
     t_mouse_motion_val val;
     t_control control;
     t_map map;
+
+    printf("finish struct\n");
 
     uint8_t mode = 0;
     const int MODE_MAX = 0b0111;
@@ -67,7 +52,7 @@ void MICROMOUSE()
     interrupt.ptr_by_control(&control);
     interrupt.ptr_by_map(&map);
 
-    // printf("finish interrupt\n");
+    printf("finish interrupt struct\n");
 
     // モーション系
     Adachi motion;
@@ -76,7 +61,7 @@ void MICROMOUSE()
     motion.ptr_by_control(&control);
     motion.ptr_by_map(&map);
 
-    // printf("finish motion\n");
+    printf("finish motion struct\n");
 
     // センサ系
     adc.GetData(&sens);
@@ -84,14 +69,7 @@ void MICROMOUSE()
     enc_R.GetData(&sens);
     enc_L.GetData(&sens);
 
-    // タスク優先順位 1 ~ 25
-    
-    
-
-    xTaskCreatePinnedToCore(myTaskInterrupt,
-                            "interrupt", 8192, &interrupt, configMAX_PRIORITIES, NULL, PRO_CPU_NUM);
-    xTaskCreatePinnedToCore(myTaskAdc,
-                            "adc", 8192, &adc, configMAX_PRIORITIES - 1, NULL, PRO_CPU_NUM);
+    printf("finish sensor struct\n");
 
     /* パラメータの設定 */
 
@@ -137,6 +115,10 @@ void MICROMOUSE()
     sens.wall.th_control.r = 100;
     sens.wall.ref.l = 141;
     sens.wall.ref.r = 170;
+
+    printf("finish parameter\n");
+
+    
 
     /* メインループ */
     while (1)

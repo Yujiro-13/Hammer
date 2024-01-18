@@ -17,7 +17,7 @@
 class AS5047P : public Sensor
 {
 public:
-    AS5047P(spi_host_device_t bus,gpio_num_t cs);
+    AS5047P(spi_host_device_t bus,gpio_num_t cs, bool init_flag);
     ~AS5047P();
 
     void GetData(t_sens_data *_sens) override;
@@ -34,7 +34,7 @@ private:
     spi_bus_config_t bus_enc;
     spi_device_interface_config_t dev_enc;
     gpio_num_t _cs;
-
+    
     t_sens_data *sens;
     
 };

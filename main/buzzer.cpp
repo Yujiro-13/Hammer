@@ -26,6 +26,8 @@ BUZZER::BUZZER(ledc_channel_t channel, ledc_timer_t timer, gpio_num_t pin){
     ledc_channel.hpoint         = 0;
 
     ESP_ERROR_CHECK(ledc_channel_config(&ledc_channel));
+
+    printf("BUZZER init\n");
 }
 BUZZER::~BUZZER(){}
 

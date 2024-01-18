@@ -19,6 +19,7 @@ public:
     void setMotorSpeed(float spdR, float spdL, float fan);
     void sincurve();
 private:
+    
     float spdR,spdL;
     float fan;
     float t = 0;

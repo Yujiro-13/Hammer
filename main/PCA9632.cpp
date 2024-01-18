@@ -3,7 +3,9 @@
 PCA9632::PCA9632(i2c_port_t port, uint8_t adrs){
     
     // バスの初期化
+    i2c_config_t i2c_conf;
     memset(&i2c_conf, 0, sizeof(i2c_conf));
+    printf("memset i2c_conf\n");
     i2c_conf.mode = I2C_MODE_MASTER;
     i2c_conf.sda_io_num = LED_SDA;
     i2c_conf.scl_io_num = LED_SCL;
@@ -12,6 +14,7 @@ PCA9632::PCA9632(i2c_port_t port, uint8_t adrs){
     i2c_conf.master.clk_speed = LED_FREQ;
     i2c_conf.clk_flags = 0;
 
+    esp_err_t ret;
     ret = i2c_param_config(I2C_NUM_0, &i2c_conf);
     ESP_ERROR_CHECK(ret);
     ret = i2c_driver_install(I2C_NUM_0, I2C_MODE_MASTER, 0, 0, 0);
@@ -22,6 +25,8 @@ PCA9632::PCA9632(i2c_port_t port, uint8_t adrs){
     _adrs = adrs;
     write(0x00,0x01);
     _init = true;
+
+    printf("led init\n");
 }
 PCA9632::~PCA9632(){}
 

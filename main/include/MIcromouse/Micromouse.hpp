@@ -11,6 +11,7 @@
 #include "../Driver/MPU6500.hpp"
 #include "../Driver/PCA9632.hpp"
 #include "../Driver/Motor.hpp"
+//#include "../MIcromouse/interrupt.hpp"
 //#include "../MIcromouse/Motion/adachi.hpp"
 
 
@@ -30,7 +31,7 @@ Interface Micromouse
 
 
 
-void MICROMOUSE();
+void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU6500 &imu, PCA9632 &led, Motor &motor, Interrupt &interrupt); // 継承先なため、Interruptのファイルはインクルードできない
 
 
 
