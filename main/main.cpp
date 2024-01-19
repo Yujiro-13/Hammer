@@ -4,22 +4,15 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_chip_info.h"
-#include "include/Micromouse/Micromouse.hpp"
+#include "MIcromouse/Base_task.hpp"
 #include "include/MIcromouse/interrupt.hpp"
 //#include "include/Micromouse/UI/UI.hpp"
 
 
-void myTaskInterrupt(void *pvpram)
-{
-    Interrupt *interrupt = static_cast<Interrupt *>(pvpram);
-    interrupt->interrupt();
-}
 
-void myTaskAdc(void *pvpram)
-{
-    ADC *adc = static_cast<ADC *>(pvpram);
-    adc->adc_loop();
-}
+
+
+
 
 extern "C" void app_main(void)
 {
@@ -42,18 +35,19 @@ extern "C" void app_main(void)
 
     printf("finish interrupt\n");
 
+    
+
     esp_chip_info_t chip_info;
     esp_chip_info(&chip_info);
     printf("Chip: %s\tCores: %d\r\n",
            CONFIG_IDF_TARGET, chip_info.cores);
 
-    // タスク優先順位 1 ~ 25
-    xTaskCreatePinnedToCore(myTaskInterrupt,
-                            "interrupt", 16384, &interrupt, configMAX_PRIORITIES, NULL, PRO_CPU_NUM);
-    xTaskCreatePinnedToCore(myTaskAdc,
-                            "adc", 16384, &adc, configMAX_PRIORITIES - 1, NULL, PRO_CPU_NUM);
+    
 
-    printf("finish task\n");
+
+    
+
+    //printf("finish task\n");
 
     while (1)
     {
