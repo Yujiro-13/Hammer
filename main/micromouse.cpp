@@ -3,14 +3,13 @@
 #include "include/Micromouse/UI/log.hpp"
 #include "include/Micromouse/UI/search.hpp"
 #include "include/Micromouse/UI/test.hpp"
-// #include "include/Micromouse/Motion/motion.hpp"
 #include "include/Micromouse/Motion/adachi.hpp"
 #include "include/MIcromouse/Base_task.hpp"
 #include <functional>
 
 std::vector<std::shared_ptr<UI>> ui;
 
-void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU6500 &imu, PCA9632 &led, Motor &motor, Interrupt &interrupt);
+void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU6500 &imu, PCA9632 &led, Motor &motor);
 void set_interface();
 void call_task(UI *task, Adachi &motion);
 void set_param(Micromouse *task, t_sens_data *_sen, t_mouse_motion_val *_val, t_control *_control, t_map *_map);
@@ -30,14 +29,9 @@ void myTaskAdc(void *pvpram)
 
 /* 基本的に全ての処理のをここにまとめ、mainで呼び出す。 */
 
-void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU6500 &imu, PCA9632 &led, Motor &motor, Interrupt &interrupt)
+void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU6500 &imu, PCA9632 &led, Motor &motor)
 {
-
     // printf("start MICROMOUSE\n");
-
-    // printf("finish IRLED\n");
-
-    printf("finish module\n");
 
     /* 構造体のインスタンス生成 */
     t_sens_data sens;
@@ -47,14 +41,10 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
 
     printf("finish struct\n");
 
-    uint8_t mode = 0;
-    const int MODE_MAX = 0b0111;
-    const int MODE_MIN = 0;
-
     /* ポインタの設定・構造体の共有 */
 
     // 制御系
-
+    Interrupt interrupt;
     interrupt.set_module(adc, enc_R, enc_L, buzzer, imu, led, motor);
     interrupt.ptr_by_sensor(&sens);
     interrupt.ptr_by_motion(&val);
@@ -86,32 +76,35 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
     val.tar.len = 0.09;
     val.tar.len_half = 0.045;
 
+    // 角度
+    val.tar.rad = M_PI/2.0;
+
     // 速度
-    val.tar.acc = 0.5;
-    val.tar.vel = 0.5;
-    val.max.vel = 0.5;
-    val.min.vel = 0.1;
+    val.tar.acc = 0.0;
+    val.tar.vel = 0.0;
+    val.max.vel = 0.0;
+    val.min.vel = 0.0;
     val.end.vel = 0.0;
 
     // 角速度
-    val.tar.ang_acc = 0.5;
-    val.tar.ang_vel = 0.5;
-    val.max.ang_vel = 0.5;
-    val.min.ang_vel = 0.1;
+    val.tar.ang_acc = M_PI*4.0;
+    val.tar.ang_vel = M_PI;
+    val.max.ang_vel = 0.0;
+    val.min.ang_vel = M_PI/50.0;
     val.end.ang_vel = 0.0;
 
     // 速度制御
-    control.v.Kp = 0.5;
-    control.v.Ki = 0.0;
+    control.v.Kp = 1.0;
+    control.v.Ki = 500.0;
     control.v.Kd = 0.0;
 
     // 角速度制御
-    control.o.Kp = 0.5;
-    control.o.Ki = 0.0;
+    control.o.Kp = 0.10;
+    control.o.Ki = 100.0;
     control.o.Kd = 0.0;
 
     // 壁制御
-    control.wall.Kp = 0.5;
+    control.wall.Kp = 0.005;
     control.wall.Ki = 0.0;
     control.wall.Kd = 0.0;
 
@@ -134,20 +127,23 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
                             "adc", 8192, &adc, configMAX_PRIORITIES - 1, NULL, APP_CPU_NUM);
     printf("finish task\n");
 
-    char buffer[512];
+    /*char buffer[512];
     vTaskList(buffer);
-    printf("Task execution statistics:\n%s", buffer);
+    printf("Task execution statistics:\n%s", buffer);*/
+
+    uint8_t mode = 0;
+    const int MODE_MAX = 0b1111;
+    const int MODE_MIN = 0;
 
     /* メインループ */
     while (1)
     {
-        printf("loop start\n");
-        led.set(mode + 1); // ここで、CPUが止まる。この行をコメントアウトすると、止まらない。
-        printf("led set\n");
 
-        vTaskList(buffer);
-        printf("Task execution statistics:\n%s", buffer);
-        
+        led.set(mode + 1);
+
+        /*vTaskList(buffer);
+        printf("Task execution statistics:\n%s", buffer);*/
+
         if (sens.wall.val.fl + sens.wall.val.l + sens.wall.val.r + sens.wall.val.fr > 3000)
         {
 
@@ -182,6 +178,9 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
             }
             vTaskDelay(pdMS_TO_TICKS(100));
         }
+        // printf("time:%d\n", control.time_count);
+        // printf("vel:%f\n", val.current.vel);
+        printf("rad:%f\n", val.current.rad);
     }
     vTaskDelay(pdMS_TO_TICKS(10));
 }
