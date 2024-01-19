@@ -5,6 +5,7 @@
 #include "include/Micromouse/UI/test.hpp"
 // #include "include/Micromouse/Motion/motion.hpp"
 #include "include/Micromouse/Motion/adachi.hpp"
+#include "include/MIcromouse/Base_task.hpp"
 #include <functional>
 
 std::vector<std::shared_ptr<UI>> ui;
@@ -15,18 +16,26 @@ void call_task(UI *task, Adachi &motion);
 void set_param(Micromouse *task, t_sens_data *_sen, t_mouse_motion_val *_val, t_control *_control, t_map *_map);
 void mode_select(uint8_t *_mode_num, Adachi &adachi, t_sens_data *sens, t_mouse_motion_val *val, t_control *control, t_map *map);
 
+void myTaskInterrupt(void *pvpram)
+{
+    Interrupt *interrupt = static_cast<Interrupt *>(pvpram);
+    interrupt->interrupt();
+}
+
+void myTaskAdc(void *pvpram)
+{
+    ADC *adc = static_cast<ADC *>(pvpram);
+    adc->adc_loop();
+}
+
 /* 基本的に全ての処理のをここにまとめ、mainで呼び出す。 */
-
-
 
 void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU6500 &imu, PCA9632 &led, Motor &motor, Interrupt &interrupt)
 {
 
-    //printf("start MICROMOUSE\n");
+    // printf("start MICROMOUSE\n");
 
-    //printf("finish IRLED\n");
-
-    
+    // printf("finish IRLED\n");
 
     printf("finish module\n");
 
@@ -118,13 +127,27 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
 
     printf("finish parameter\n");
 
-    
+    // タスク優先順位 1 ~ 25
+    xTaskCreatePinnedToCore(myTaskInterrupt,
+                            "interrupt", 8192, &interrupt, configMAX_PRIORITIES, NULL, APP_CPU_NUM);
+    xTaskCreatePinnedToCore(myTaskAdc,
+                            "adc", 8192, &adc, configMAX_PRIORITIES - 1, NULL, APP_CPU_NUM);
+    printf("finish task\n");
+
+    char buffer[512];
+    vTaskList(buffer);
+    printf("Task execution statistics:\n%s", buffer);
 
     /* メインループ */
     while (1)
     {
+        printf("loop start\n");
+        led.set(mode + 1); // ここで、CPUが止まる。この行をコメントアウトすると、止まらない。
+        printf("led set\n");
 
-        led.set(mode + 1);
+        vTaskList(buffer);
+        printf("Task execution statistics:\n%s", buffer);
+        
         if (sens.wall.val.fl + sens.wall.val.l + sens.wall.val.r + sens.wall.val.fr > 3000)
         {
 

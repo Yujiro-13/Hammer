@@ -1,7 +1,7 @@
 {
     "version":            "1",
     "project_name":       "Hammer",
-    "project_version":    "4468a76-dirty",
+    "project_version":    "de6b5dd-dirty",
     "project_path":       "C:/Users/81807/Hammer",
     "idf_path":           "C:/Users/81807/esp/esp-idf",
     "build_dir":          "C:/Users/81807/Hammer/build",
