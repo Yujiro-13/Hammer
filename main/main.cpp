@@ -34,6 +34,8 @@ extern "C" void app_main(void)
     printf("Chip: %s\tCores: %d\r\n",
            CONFIG_IDF_TARGET, chip_info.cores);
 
+    //motor.sincurve();
+
     while (1)
     {
         MICROMOUSE( adc, enc_R, enc_L, buzzer, imu, led, motor);

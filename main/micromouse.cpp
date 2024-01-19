@@ -94,12 +94,12 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
     val.end.ang_vel = 0.0;
 
     // 速度制御
-    control.v.Kp = 1.0;
+    control.v.Kp = 5.0;
     control.v.Ki = 500.0;
     control.v.Kd = 0.0;
 
     // 角速度制御
-    control.o.Kp = 0.10;
+    control.o.Kp = 0.50;
     control.o.Ki = 100.0;
     control.o.Kd = 0.0;
 
@@ -179,8 +179,9 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
             vTaskDelay(pdMS_TO_TICKS(100));
         }
         // printf("time:%d\n", control.time_count);
-        // printf("vel:%f\n", val.current.vel);
-        printf("rad:%f\n", val.current.rad);
+        //printf("vel:%f\n", val.current.vel);
+        //printf("rad:%f\n", val.current.rad);
+        //printf("BatteryVoltage:%f\n", sens.BatteryVoltage);
     }
     vTaskDelay(pdMS_TO_TICKS(10));
 }

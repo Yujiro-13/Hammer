@@ -220,8 +220,8 @@ void Interrupt::feedback_control()
         /*control->Duty_l = control->V_l / control->Vatt;
         control->Duty_r = control->V_r / control->Vatt;*/
 
-        control->Duty_l = control->V_l / control->Vatt;
-        control->Duty_r = control->V_r / control->Vatt;
+        control->Duty_l = control->V_l / sens->BatteryVoltage;
+        control->Duty_r = control->V_r / sens->BatteryVoltage;
 
         // std::cout << "control->Duty_l : " << control->Duty_l << std::endl;
         // std::cout << "control->Duty_r : " << control->Duty_r << std::endl;
@@ -346,6 +346,9 @@ void Interrupt::interrupt()
         calc_angle();
 
         control->time_count++;
+
+        //printf("Duty_l : %f\n", control->Duty_l);
+        //printf("Duty_r : %f\n", control->Duty_r);
 
         // std::cout << "control->time_count : " << control->time_count << std::endl;
 

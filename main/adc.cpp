@@ -34,7 +34,7 @@ ADC::~ADC(){}
 float ADC::BatteryVoltage()
 {
     int _raw = 0;
-    //ESP_ERROR_CHECK(adc_oneshot_read(adc1, VBATT_CHANNEL, &_raw));
+    ESP_ERROR_CHECK(adc_oneshot_read(adc1, VBATT_CHANNEL, &_raw));
     return (float)((float)(_raw) * (2.2 / 1000.0));
 }
 
@@ -66,14 +66,14 @@ void ADC::WallSensor()
     ReadSensor(before, 0b1111); // 全消灯での値を取得
 
     SetIRLED(0b1001);            // fl,fr点灯
-    //ets_delay_us(300);           // 100us待つ
+    ets_delay_us(300);           // 100us待つ
     ReadSensor(sensors, 0b1001); // fl,fr点灯での値を取得
 
     SetIRLED(0b0110);                   // l,r点灯
-    //ets_delay_us(300);                  // 100us待つ
+    ets_delay_us(300);                  // 100us待つ
     ReadSensor(sensors, 0b0110);        // l,r点灯での値を取得
     SetIRLED(0b0000);                   // 全消灯
-    //vTaskDelay(1 / portTICK_PERIOD_MS); // 1ms待つ
+    vTaskDelay(1 / portTICK_PERIOD_MS); // 1ms待つ
 
     sens->wall.val.fl = sensors[0] - before[0];
     sens->wall.val.l = sensors[1] - before[1];

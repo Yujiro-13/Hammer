@@ -158,7 +158,7 @@ void Motor::sincurve()
         {
             printf("%f,\r\n", t);
         }
-        setMotorSpeed(0.4, 0.0, fan);
+        setMotorSpeed(0.0, 0.4, fan);
         t += 0.01;
         vTaskDelay(1 / portTICK_PERIOD_MS);
     }
