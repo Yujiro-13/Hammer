@@ -214,7 +214,7 @@ typedef struct
 {
     t_pos pos;
     t_wall wall[32][32];
-    unsigned char size[32][32];
+    unsigned char size[32][32] = {0};
 }t_map;     //map data
 
 
