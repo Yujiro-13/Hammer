@@ -349,7 +349,7 @@ void Interrupt::interrupt()
 
         // std::cout << "control->time_count : " << control->time_count << std::endl;
 
-        //vTaskDelay(1);
+        vTaskDelay(1/ portTICK_PERIOD_MS);
     }
 }
 
