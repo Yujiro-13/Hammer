@@ -3,6 +3,13 @@
 
 #include <iostream>
 #include <string.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/semphr.h>    // freertos以下のファイルをインクルードしたい場合、必ず先にFreeRTOS.hをインクルードする
+#include "esp_flash_spi_init.h"
+#include "esp_partition.h"
+#include "esp_log.h"
+#include "esp_flash.h"
+#include "spi_flash_mmap.h"
 #include "../structs.hpp"
 #include "Micromouse.hpp"
 
@@ -17,14 +24,16 @@ class Interrupt : public Micromouse{
         void ptr_by_control(t_control *control) override;
         void ptr_by_map(t_map *map) override;
         void set_module(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot) override;
+        void GetSemphrHandle(SemaphoreHandle_t *_on_logging);
         void reset_I_gain();
+        void logging();
     private:
         void calc_target();
         void wall_control();
         void feedback_control();
         void calc_distance();
         void calc_angle();
-        t_sens_data *sens;   // 後でexternの方を消し、こっちに書き換える
+        t_sens_data *sens;
         t_mouse_motion_val *val;
         t_control *control;
         t_map *map;
@@ -39,14 +48,12 @@ class Interrupt : public Micromouse{
         PCA9632 *led;
         Motor *mot;
 
-        t_sensing_result result;
+        SemaphoreHandle_t *on_logging;
 
 
 
 
 };
-
-//extern Interrupt interrupt;
 
 
 

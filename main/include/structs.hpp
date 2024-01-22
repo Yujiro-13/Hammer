@@ -191,6 +191,7 @@ typedef struct
     t_bool control_flag = FALSE;
     t_motor mot;
     t_odom odom;
+    t_bool log_flag = FALSE;
 }t_control; //control parameter
 
 

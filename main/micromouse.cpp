@@ -27,6 +27,12 @@ void myTaskAdc(void *pvpram)
     adc->adc_loop();
 }
 
+void myTaskLog(void *pvpram)
+{
+    Interrupt *log = static_cast<Interrupt *>(pvpram);
+    log->logging();
+}
+
 /* 基本的に全ての処理のをここにまとめ、mainで呼び出す。 */
 
 void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU6500 &imu, PCA9632 &led, Motor &motor)
@@ -41,6 +47,9 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
 
     printf("finish struct\n");
 
+    /* ログ取得用ハンドルの設定 */
+    SemaphoreHandle_t on_logging = xSemaphoreCreateBinary();
+
     /* ポインタの設定・構造体の共有 */
 
     // 制御系
@@ -50,6 +59,7 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
     interrupt.ptr_by_motion(&val);
     interrupt.ptr_by_control(&control);
     interrupt.ptr_by_map(&map);
+    interrupt.GetSemphrHandle(&on_logging);
 
     printf("finish interrupt struct\n");
 
@@ -59,6 +69,7 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
     motion.ptr_by_motion(&val);
     motion.ptr_by_control(&control);
     motion.ptr_by_map(&map);
+    motion.GetSemphrHandle(&on_logging);
 
     printf("finish motion struct\n");
 
@@ -81,6 +92,7 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
 
     // 速度
     val.tar.acc = 0.0;
+    val.max.acc = 0.0;
     val.tar.vel = 0.0;
     val.max.vel = 0.0;
     val.min.vel = 0.0;
@@ -120,11 +132,13 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
 
     printf("finish parameter\n");
 
-    // タスク優先順位 1 ~ 25
+    // タスク優先順位 1 ~ 25    25が最高優先度
     xTaskCreatePinnedToCore(myTaskInterrupt,
                             "interrupt", 8192, &interrupt, configMAX_PRIORITIES, NULL, APP_CPU_NUM);
     xTaskCreatePinnedToCore(myTaskAdc,
                             "adc", 8192, &adc, configMAX_PRIORITIES - 1, NULL, APP_CPU_NUM);
+    xTaskCreatePinnedToCore(myTaskLog,
+                            "log", 8192, &interrupt, configMAX_PRIORITIES - 2, NULL, APP_CPU_NUM);
     printf("finish task\n");
 
     /*char buffer[512];

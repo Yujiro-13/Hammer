@@ -2,10 +2,12 @@
 #define MOTION_HPP
 
 #include <iostream>
+#include <freertos/FreeRTOS.h>
+#include <freertos/semphr.h>    // freertos以下のファイルをインクルードしたい場合、必ず先にFreeRTOS.hをインクルードする
 #include "../Micromouse.hpp"
 //#include "../Micromouse/interrupt.hpp"
 
-class Motion : Micromouse
+class Motion : public Micromouse
 {
     public:
         Motion();
@@ -15,6 +17,7 @@ class Motion : Micromouse
         void ptr_by_control(t_control *control) override;
         void ptr_by_map(t_map *map) override;
         void set_module(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot) override;
+        void GetSemphrHandle(SemaphoreHandle_t *_on_logging);
         void run();
         void run_half();
         void turn_left();
@@ -24,15 +27,18 @@ class Motion : Micromouse
         void back();
         void slalom();
         void check_enkaigei();
+        
     protected:
-        t_sens_data *sens;   // 後でexternの方を消し、こっちに書き換える。ここは、privateかprotected要検討
+        t_sens_data *sens;
         t_mouse_motion_val *val;
         t_control *control;
         t_map *map;
+        SemaphoreHandle_t *on_logging;
     private:
-        //Interrupt *interrupt;
         uint8_t len_count = 0;
         float local_rad = 0.0;
+        
+
 };
 
 #endif // MOTION_HPP

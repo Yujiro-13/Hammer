@@ -14,6 +14,7 @@ void Search::ref_by_motion(Adachi &_adachi) { motion = _adachi;}
 
 void Search::main_task()
 {
+    control->log_flag = TRUE;
     motion.search_adachi(3,3);
     std::cout << "Search" << std::endl;
 }
@@ -32,6 +33,7 @@ void All_Search::ref_by_motion(Adachi &_adachi) { motion = _adachi;}
 
 void All_Search::main_task()
 {
+    control->log_flag = TRUE;
     motion.search_adachi(5,5);
     std::cout << "All_Search" << std::endl;
 }

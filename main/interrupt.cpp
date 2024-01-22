@@ -2,9 +2,12 @@
 
 #define TIRE_DIAMETER 0.01368
 #define MMPP TIRE_DIAMETER *M_PI / ENC_MAX
-// float _accel = 0.0;
 
-Interrupt::Interrupt() { /*std::cout << "Interrupt" << std::endl;*/ }
+
+
+Interrupt::Interrupt()
+{ /*std::cout << "Interrupt" << std::endl;*/
+}
 
 Interrupt::~Interrupt() { std::cout << "~Interrupt" << std::endl; }
 
@@ -28,35 +31,10 @@ void Interrupt::set_module(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_b
     std::cout << "set_module" << std::endl;
 }
 
-void init_structs()
-{
-    // memset(&s_dir, 0, sizeof(s_dir));
-    // memset(&sens->wall, 0, sizeof(sens->wall));
-    // memset(&gyro, 0, sizeof(gyro));
-    // memset(&enc, 0, sizeof(enc));
-    // memset(&motion, 0, sizeof(motion));
-    //memset(&m_val, 0, sizeof(m_val));
-    // memset(&mot, 0, sizeof(mot));
-    // memset(&pid, 0, sizeof(pid));
-    // memset(&ctl, 0, sizeof(ctl));
-    // memset(&wall, 0, sizeof(wall));
-    //memset(&map, 0, sizeof(map));
-    // memset(&mypos, 0, sizeof(mypos));
-    // memset(&odom, 0, sizeof(odom));
-    //control->mot.tire_diameter = 0.01368;
-    //control->mot.tire_radius = 0.0066;
-    //val->current.alpha = 0.6;
-
-    // on_logging = xSemaphoreCreateBinary();
-}
+void Interrupt::GetSemphrHandle(SemaphoreHandle_t *_on_logging) { on_logging = _on_logging; }
 
 void Interrupt::calc_target()
 { //  目標値を計算する
-
-    /*std::cout << "val->tar.vel : " << val->tar.vel << std::endl;
-    std::cout << "val->max.vel : " << val->max.vel << std::endl;
-    std::cout << "val->current.acc : " << val->current.acc << std::endl;
-    std::cout << "calc_target" << std::endl;*/
 
     val->tar.vel += (val->tar.acc) / 1000.0;
 
@@ -64,15 +42,6 @@ void Interrupt::calc_target()
     {
         val->tar.vel = val->max.vel;
     }
-
-    // val->current.len += val->tar.vel;
-    // control->I.tar.vel += val->tar.vel; // 目標積分値更新
-
-    /*std::cout << "val->current.len : " << val->current.len << std::endl;
-
-    std::cout << "val->tar.ang_vel : " << val->tar.ang_vel << std::endl;
-    std::cout << "val->max.ang_vel : " << val->max.ang_vel << std::endl;
-    std::cout << "val->current.ang_acc : " << val->current.ang_acc << std::endl;*/
 
     val->tar.ang_vel += (val->tar.ang_acc) / 1000.0;
 
@@ -83,8 +52,6 @@ void Interrupt::calc_target()
         {
             val->tar.ang_vel = val->max.ang_vel;
         }
-
-        // val->current.rad += val->tar.ang_vel;
     }
     else if (val->current.flag == RIGHT)
     {
@@ -95,12 +62,9 @@ void Interrupt::calc_target()
         }
     }
 
-    // control->I.tar.ang_vel += val->tar.ang_vel; // 目標角速度積分値更新
-
-    // std::cout << "val->current.rad : " << val->current.rad << std::endl;
-
     return;
 }
+
 void Interrupt::wall_control() //  壁制御
 {
     // 左前壁センサ
@@ -197,6 +161,7 @@ void Interrupt::wall_control() //  壁制御
     // std::cout << "wall_ctl" << std::endl;
     return;
 }
+
 void Interrupt::feedback_control()
 { // フィードバック制御
     if (control->control_flag == TRUE)
@@ -217,14 +182,8 @@ void Interrupt::feedback_control()
         control->V_l -= val->current.ang_error * (control->o.Kp) + val->I.ang_error * (control->o.Ki) - val->p.ang_error * (control->o.Kd);
         control->V_r += val->current.ang_error * (control->o.Kp) + val->I.ang_error * (control->o.Ki) - val->p.ang_error * (control->o.Kd);
 
-        /*control->Duty_l = control->V_l / control->Vatt;
-        control->Duty_r = control->V_r / control->Vatt;*/
-
         control->Duty_l = control->V_l / sens->BatteryVoltage;
         control->Duty_r = control->V_r / sens->BatteryVoltage;
-
-        // std::cout << "control->Duty_l : " << control->Duty_l << std::endl;
-        // std::cout << "control->Duty_r : " << control->Duty_r << std::endl;
 
         mot->setMotorSpeed(control->Duty_r, control->Duty_l, 0.0);
     }
@@ -240,11 +199,7 @@ void Interrupt::feedback_control()
 void Interrupt::calc_distance()
 { //  走行距離を計算する
 
-    //result = encL->GetData();
-    //result = encR->GetData();
     // エンコーダの値を取得
-    //sens->enc.data.l = -result.Angle_L;
-    //sens->enc.data.r = result.Angle_R;
     sens->enc.data.l = -encL->readAngle();
     sens->enc.data.r = encR->readAngle();
 
@@ -316,12 +271,61 @@ void Interrupt::calc_angle()
 
     val->I.ang_vel += val->current.ang_vel; // 角速度積分値更新
 
-    // std::cout << "val->current.rad : " << val->current.rad << std::endl;
+    return;
+}
 
-    // std::cout << "calc_ang" << std::endl;
-    // printf("yaw : %f\n", _yaw);
-    // printf("ref : %f\n", sens->gyro.ref);
-    // printf("imu.in_survaeybias : %d\n", imu.in_survaeybias);
+void Interrupt::logging()
+{
+    esp_err_t err;
+
+    const esp_partition_t *partition = esp_partition_find_first(ESP_PARTITION_TYPE_DATA, ESP_PARTITION_SUBTYPE_ANY, "logs");
+    if (partition == NULL)
+    {
+        ESP_LOGE("logging", "partition not found");
+        vTaskDelete(NULL);
+    }
+
+    err = esp_partition_erase_range(partition, 0, partition->size);
+    if (err != ESP_OK)
+    {
+        ESP_LOGE("logging", "erase error");
+        vTaskDelete(NULL);
+    }
+    uint32_t mem_offset = 0;
+    int16_t adcs[10];
+
+    ESP_LOGE("logging", "start logging");
+
+    while (1)
+    {
+        if (control->log_flag == TRUE)
+        {
+            xSemaphoreTake(*on_logging, portMAX_DELAY);
+            adcs[0] = sens->wall.val.fl;
+            adcs[1] = sens->wall.val.l;
+            adcs[2] = sens->wall.val.r;
+            adcs[3] = sens->wall.val.fr;
+            adcs[4] = (uint16_t)(sens->BatteryVoltage * 1000);
+            adcs[5] = sens->wall.exist.fl;
+            adcs[6] = sens->wall.exist.l;
+            adcs[7] = sens->wall.exist.r;
+            adcs[8] = sens->wall.exist.fr;
+            adcs[9] = (uint16_t)(val->current.len * 1000);
+            err = esp_partition_write(partition, mem_offset, adcs, sizeof(adcs));
+            if (err != ESP_OK)
+            {
+                ESP_LOGE("logging", "write error");
+                printf("%s\n", esp_err_to_name(err));
+
+                break;
+            }
+            mem_offset += sizeof(adcs);
+            if (mem_offset >= partition->size)
+                break;
+        }
+    }
+    vTaskDelete(NULL);
+    // std::cout << "logging" << std::endl;
     return;
 }
 
@@ -338,7 +342,6 @@ void Interrupt::interrupt()
 
     while (1)
     {
-
         calc_target();
         wall_control();
         feedback_control();
@@ -347,12 +350,11 @@ void Interrupt::interrupt()
 
         control->time_count++;
 
-        //printf("Duty_l : %f\n", control->Duty_l);
-        //printf("Duty_r : %f\n", control->Duty_r);
+        // printf("Duty_l : %f\n", control->Duty_l);
+        // printf("Duty_r : %f\n", control->Duty_r);
 
         // std::cout << "control->time_count : " << control->time_count << std::endl;
 
-        vTaskDelay(1/ portTICK_PERIOD_MS);
+        vTaskDelay(1 / portTICK_PERIOD_MS);
     }
 }
-

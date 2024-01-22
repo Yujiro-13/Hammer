@@ -14,6 +14,7 @@ void Test::ref_by_motion(Adachi &_adachi) { motion = _adachi; }
 
 void Test::main_task()
 {   
+    control->log_flag = TRUE;
     motion.check_enkaigei();
     std::cout << "Test" << std::endl;
 }
@@ -32,6 +33,7 @@ void Test2::ref_by_motion(Adachi &_adachi) { motion = _adachi; }
 
 void Test2::main_task()
 {
+    control->log_flag = TRUE;
     motion.run();
     std::cout << "Test2" << std::endl;
 }
@@ -50,6 +52,7 @@ void Test3::ref_by_motion(Adachi &_adachi) { motion = _adachi; }
 
 void Test3::main_task()
 {
+    control->log_flag = TRUE;
     motion.turn_left();
     std::cout << "Test3" << std::endl;
 }
@@ -68,6 +71,7 @@ void Test4::ref_by_motion(Adachi &_adachi) { motion = _adachi; }
 
 void Test4::main_task()
 {
+    control->log_flag = TRUE;
     motion.turn_right();
     std::cout << "Test4" << std::endl;
 }
