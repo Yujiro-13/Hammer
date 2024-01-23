@@ -15,7 +15,7 @@ void Search::ref_by_motion(Adachi &_adachi) { motion = _adachi;}
 void Search::main_task()
 {
     control->log_flag = TRUE;
-    motion.search_adachi(3,3);
+    motion.search_adachi(map->GOAL_X,map->GOAL_Y);
     std::cout << "Search" << std::endl;
 }
 

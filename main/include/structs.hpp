@@ -69,7 +69,7 @@ typedef struct
     t_sens_dir th_control;   //control threshold value
     t_wall_exist exist; //wall true or false
     t_wall_exist control_enable;  //control true or false
-    t_bool wall_control;  //enable or disable
+    t_bool control;  //enable or disable
 }t_wall_sens;  //wall sensor data
 
 typedef struct 
@@ -216,6 +216,8 @@ typedef struct
     t_pos pos;
     t_wall wall[32][32];
     unsigned char size[32][32] = {0};
+    uint8_t GOAL_X = 0;
+    uint8_t GOAL_Y = 0;
 }t_map;     //map data
 
 
