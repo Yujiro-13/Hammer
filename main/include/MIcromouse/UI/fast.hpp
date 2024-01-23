@@ -16,7 +16,7 @@ class Fast : public UI
         void main_task() override;
         void ref_by_motion(Adachi &_adachi) override;
     private:
-        t_sens_data *sens;   // 後でexternの方を消し、こっちに書き換える
+        t_sens_data *sens;    
         t_mouse_motion_val *val;
         t_control *control;
         t_map *map;
@@ -34,7 +34,7 @@ class Fast2 : public UI
         void main_task() override;
         void ref_by_motion(Adachi &_adachi) override;
     private:
-        t_sens_data *sens;   // 後でexternの方を消し、こっちに書き換える
+        t_sens_data *sens;    
         t_mouse_motion_val *val;
         t_control *control;
         t_map *map;
@@ -52,7 +52,7 @@ class Fast3 : public UI
         void main_task() override;
         void ref_by_motion(Adachi &_adachi) override;
     private:
-        t_sens_data *sens;   // 後でexternの方を消し、こっちに書き換える
+        t_sens_data *sens;    
         t_mouse_motion_val *val;
         t_control *control;
         t_map *map;
@@ -70,7 +70,7 @@ class Fast4 : public UI
         void main_task() override;
         void ref_by_motion(Adachi &_adachi) override;
     private:
-        t_sens_data *sens;   // 後でexternの方を消し、こっちに書き換える
+        t_sens_data *sens;    
         t_mouse_motion_val *val;
         t_control *control;
         t_map *map;

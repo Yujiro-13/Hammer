@@ -20,7 +20,7 @@ class Log : public UI
         void ref_by_motion(Adachi &_adachi) override;
         void log_print();
     private:
-        t_sens_data *sens;   // 後でexternの方を消し、こっちに書き換える
+        t_sens_data *sens;    
         t_mouse_motion_val *val;
         t_control *control;
         t_map *map;
@@ -39,7 +39,7 @@ class Log1 : public UI
         void ref_by_motion(Adachi &_adachi) override;
         void log_print();
     private:
-        t_sens_data *sens;   // 後でexternの方を消し、こっちに書き換える
+        t_sens_data *sens;    
         t_mouse_motion_val *val;
         t_control *control;
         t_map *map;

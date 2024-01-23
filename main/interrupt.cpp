@@ -1,7 +1,7 @@
 #include "include/Micromouse/interrupt.hpp"
 
 #define TIRE_DIAMETER 0.01368
-#define MMPP TIRE_DIAMETER *M_PI / ENC_MAX
+#define MMPP TIRE_DIAMETER*M_PI / ENC_MAX
 
 
 
@@ -56,9 +56,9 @@ void Interrupt::calc_target()
     else if (val->current.flag == RIGHT)
     {
 
-        if (val->tar.ang_vel < val->max.ang_vel)
+        if (val->tar.ang_vel < -(val->max.ang_vel))
         {
-            val->tar.ang_vel = val->max.ang_vel;
+            val->tar.ang_vel = -(val->max.ang_vel);
         }
     }
 
@@ -128,7 +128,7 @@ void Interrupt::wall_control() //  壁制御
         sens->wall.control_enable.r = FALSE;
     }
 
-    if (sens->wall.wall_control == TRUE && sens->wall.val.fl + sens->wall.val.fr <= (sens->wall.th_wall.fl + sens->wall.th_wall.fr) * 5.0)
+    if (sens->wall.control == TRUE && sens->wall.val.fl + sens->wall.val.fr <= (sens->wall.th_wall.fl + sens->wall.th_wall.fr) * 5.0)
     {
 
         if (sens->wall.control_enable.l == TRUE && sens->wall.control_enable.r == TRUE)
@@ -298,9 +298,9 @@ void Interrupt::logging()
 
     while (1)
     {
-        if (control->log_flag == TRUE)
-        {
-            xSemaphoreTake(*on_logging, portMAX_DELAY);
+        //if (control->log_flag == TRUE)
+        //{
+            xSemaphoreTake(*on_logging, portMAX_DELAY); // セマフォが取得できるまで無制限に待機 （他タスクによって解放されるまでブロックされる）
             adcs[0] = sens->wall.val.fl;
             adcs[1] = sens->wall.val.l;
             adcs[2] = sens->wall.val.r;
@@ -322,7 +322,10 @@ void Interrupt::logging()
             mem_offset += sizeof(adcs);
             if (mem_offset >= partition->size)
                 break;
-        }
+
+            
+        //}
+        //vTaskDelay(1 / portTICK_PERIOD_MS);
     }
     vTaskDelete(NULL);
     // std::cout << "logging" << std::endl;
@@ -348,12 +351,15 @@ void Interrupt::interrupt()
         calc_distance();
         calc_angle();
 
+        if (control->log_flag == TRUE)
+        {
+            xSemaphoreGive(*on_logging);
+        }
+        
         control->time_count++;
 
         // printf("Duty_l : %f\n", control->Duty_l);
         // printf("Duty_r : %f\n", control->Duty_r);
-
-        // std::cout << "control->time_count : " << control->time_count << std::endl;
 
         vTaskDelay(1 / portTICK_PERIOD_MS);
     }

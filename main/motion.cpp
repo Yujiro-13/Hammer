@@ -1,6 +1,11 @@
 #include "include/Micromouse/Motion/motion.hpp"
 
-Motion::Motion() { std::cout << "Motion" << std::endl; }
+#define SECTION 0.09
+#define SECTION_HALF 0.045
+#define TURN_HALF M_PI
+#define TURN_QUARTER M_PI/2.0
+
+Motion::Motion() { /*std::cout << "Motion" << std::endl;*/ }
 
 Motion::~Motion() {}
 
@@ -19,14 +24,18 @@ void Motion::GetSemphrHandle(SemaphoreHandle_t *_on_logging) { on_logging = _on_
 void Motion::run()
 {
     control->control_flag = TRUE;    // 制御ON
-    sens->wall.wall_control = FALSE; // 壁制御OFF
+    sens->wall.control = FALSE; // 壁制御OFF
 
     val->I.vel_error = 0.0;
     val->I.ang_error = 0.0;
     val->I.wall_error = 0.0;
 
+    val->tar.ang_acc = 0.0;
+    val->tar.ang_vel = 0.0;
+
     val->current.len = 0.0;
     val->tar.acc = val->max.acc;
+    val->tar.len = SECTION;
     
 
     if (len_count == 7)
@@ -48,7 +57,7 @@ void Motion::run()
     {
         if (val->tar.vel <= val->max.vel)
         {
-            val->current.acc = 0;
+            val->tar.acc = 0;
             val->tar.vel = val->max.vel;
         }
         vTaskDelay(1 / portTICK_PERIOD_MS);
@@ -57,20 +66,24 @@ void Motion::run()
     // val->tar.vel = val->tar.vel;
     val->tar.acc = 0.0;
 
-    std::cout << "run" << std::endl;
+    //std::cout << "run" << std::endl;
 }
 
 void Motion::run_half()
 {
     control->control_flag = TRUE;    // 制御ON
-    sens->wall.wall_control = FALSE; // 壁制御OFF
+    sens->wall.control = FALSE; // 壁制御OFF
 
     val->I.vel_error = 0.0;
     val->I.ang_error = 0.0;
     val->I.wall_error = 0.0;
 
-    val->tar.len = val->tar.len_half;
+    val->tar.ang_acc = 0.0;
+    val->tar.ang_vel = 0.0;
+
+    val->tar.len = SECTION_HALF;
     val->current.len = 0.0;
+    val->tar.acc = val->max.acc;
 
     if (len_count == 7)
     {
@@ -78,7 +91,7 @@ void Motion::run_half()
         val->tar.len = 0.045;
     }
 
-    while (((val->tar.len - 0.03) - val->current.len) > (((val->tar.vel) * (val->tar.vel) - (val->end.vel) * (val->end.vel)) / (2.0 *
+    while (((val->tar.len - 0.01) - val->current.len) > (((val->tar.vel) * (val->tar.vel) - (val->end.vel) * (val->end.vel)) / (2.0 *
                                                                                                                                 val->tar.acc)))
     {
         vTaskDelay(1 / portTICK_PERIOD_MS);
@@ -91,7 +104,7 @@ void Motion::run_half()
     {
         if (val->tar.vel <= val->max.vel)
         {
-            val->current.acc = 0;
+            val->tar.acc = 0;
             val->tar.vel = val->max.vel;
         }
         vTaskDelay(1 / portTICK_PERIOD_MS);
@@ -100,7 +113,7 @@ void Motion::run_half()
     // val->tar.vel = val->tar.vel;
     val->tar.acc = 0.0;
 
-    std::cout << "run" << std::endl;
+    //std::cout << "run" << std::endl;
 }
 
 void Motion::turn_left()
@@ -108,19 +121,27 @@ void Motion::turn_left()
     vTaskDelay(100);
 
     control->control_flag = TRUE;    // 制御ON
-    sens->wall.wall_control = FALSE; // 壁制御OFF
+    sens->wall.control = FALSE; // 壁制御OFF
     val->current.flag = LEFT;        // 左旋回
 
     val->I.vel_error = 0.0;
     val->I.ang_error = 0.0;
     val->I.wall_error = 0.0;
 
+    val->tar.vel = 0.0;
+    val->tar.acc = 0.0;
+
+    val->tar.ang_acc = val->max.ang_acc;
+    val->max.ang_vel = val->max.ang_vel;
+
+    val->tar.rad = TURN_QUARTER;
+
     // std::cout << "turn_left" << std::endl;
     int turn_count = 0;
 
     local_rad = val->current.rad; // 現在の角度を保存
 
-    while (M_PI / 2 > (val->current.rad - local_rad))
+    while (val->tar.rad > (val->current.rad - local_rad))
     {
         turn_count++;
         // printf("turn_count : %d\n", turn_count);
@@ -133,7 +154,7 @@ void Motion::turn_left()
     val->tar.ang_vel = 0.0;
     val->tar.ang_acc = 0.0;
 
-    std::cout << "turn" << std::endl;
+    //std::cout << "turn" << std::endl;
 }
 
 void Motion::turn_right()
@@ -141,24 +162,30 @@ void Motion::turn_right()
     vTaskDelay(100);
 
     control->control_flag = TRUE;    // 制御ON
-    sens->wall.wall_control = FALSE; // 壁制御OFF
-    val->current.flag = RIGHT;       // 左旋回
+    sens->wall.control = FALSE; // 壁制御OFF
+    val->current.flag = RIGHT;       // 右旋回
 
     val->I.vel_error = 0.0;
     val->I.ang_error = 0.0;
     val->I.wall_error = 0.0;
 
-    val->max.ang_vel = -(val->max.ang_vel);
-    val->tar.ang_acc = -(val->tar.ang_acc);
+    val->tar.vel = 0.0;
+    val->tar.acc = 0.0;
+
+    val->tar.ang_acc = -(val->max.ang_acc);
+    //val->max.ang_vel = -(val->max.ang_vel);
+
+    val->tar.rad = -(TURN_QUARTER);
 
     // std::cout << "turn_left" << std::endl;
-    int turn_count = 0;
+    //int turn_count = 0;
 
     local_rad = val->current.rad; // 現在の角度を保存
 
-    while (-(M_PI / 2) < (val->current.rad - local_rad))
+    while (val->tar.rad < (val->current.rad - local_rad))
     {
-        turn_count++;
+        //turn_count++;
+        printf("val->tar.ang_vel : %f\n", val->tar.ang_vel);
         // printf("turn_count : %d\n", turn_count);
         vTaskDelay(1 / portTICK_PERIOD_MS);
     }
@@ -169,7 +196,7 @@ void Motion::turn_right()
     val->tar.ang_vel = 0.0;
     val->tar.ang_acc = 0.0;
 
-    std::cout << "turn" << std::endl;
+    //std::cout << "turn" << std::endl;
 }
 
 void Motion::turn_half()
@@ -177,7 +204,7 @@ void Motion::turn_half()
     vTaskDelay(100);
 
     control->control_flag = TRUE;    // 制御ON
-    sens->wall.wall_control = FALSE; // 壁制御OFF
+    sens->wall.control = FALSE; // 壁制御OFF
     val->current.flag = LEFT;        // 左旋回
 
     val->I.vel_error = 0.0;
@@ -206,23 +233,17 @@ void Motion::turn_half()
 void Motion::stop()
 {
     control->control_flag = TRUE;    // 制御ON
-    sens->wall.wall_control = FALSE; // 壁制御OFF
+    sens->wall.control = FALSE; // 壁制御OFF
 
     val->I.vel_error = 0.0;
     val->I.ang_error = 0.0;
     val->I.wall_error = 0.0;
 
-    val->tar.len = val->tar.len_half;
+    val->tar.len = SECTION_HALF;
     val->current.len = 0.0;
     val->tar.acc = val->max.acc;
 
-    if (len_count == 7)
-    {
-        // val->tar.len = 45;
-        val->tar.len = 0.045;
-    }
-
-    while (((val->tar.len - 0.03) - val->current.len) > (((val->tar.vel) * (val->tar.vel) - (val->end.vel) * (val->end.vel)) / (2.0 *
+    while (((val->tar.len - 0.01) - val->current.len) > (((val->tar.vel) * (val->tar.vel) - (val->end.vel) * (val->end.vel)) / (2.0 *
                                                                                                                                 val->tar.acc)))
     {
         vTaskDelay(1 / portTICK_PERIOD_MS);
@@ -235,7 +256,7 @@ void Motion::stop()
     {
         if (val->tar.vel <= val->min.vel)
         {
-            val->current.acc = 0;
+            val->tar.acc = 0;
             val->tar.vel = val->min.vel;
         }
         vTaskDelay(1 / portTICK_PERIOD_MS);
@@ -261,7 +282,7 @@ void Motion::slalom()
 
 void Motion::check_enkaigei()
 {
-    sens->wall.wall_control = FALSE;
+    sens->wall.control = FALSE;
     control->control_flag = TRUE;
 
     val->I.vel_error = 0.0;

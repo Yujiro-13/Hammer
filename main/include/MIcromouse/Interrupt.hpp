@@ -39,6 +39,8 @@ class Interrupt : public Micromouse{
         t_map *map;
         float _accel = 0.0;
         float _vel = 0.0;
+        float max_vel = 0.0;
+        float max_ang_vel = 0.0;
 
         ADC *adc;
         AS5047P *encR;

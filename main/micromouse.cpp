@@ -91,17 +91,18 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
     val.tar.rad = M_PI/2.0;
 
     // 速度
-    val.tar.acc = 0.0;
-    val.max.acc = 0.0;
-    val.tar.vel = 0.0;
-    val.max.vel = 0.0;
-    val.min.vel = 0.0;
-    val.end.vel = 0.0;
+    val.tar.acc = 0.5;
+    val.max.acc = 0.5;
+    val.tar.vel = 0.3;
+    val.max.vel = 0.3;
+    val.min.vel = 0.1;
+    val.end.vel = 0.3;
 
     // 角速度
-    val.tar.ang_acc = M_PI*4.0;
-    val.tar.ang_vel = M_PI;
-    val.max.ang_vel = 0.0;
+    val.tar.ang_acc = 0.0;
+    val.max.ang_acc = M_PI*2.0;
+    val.tar.ang_vel = 0.0;
+    val.max.ang_vel = M_PI;
     val.min.ang_vel = M_PI/50.0;
     val.end.ang_vel = 0.0;
 
@@ -130,11 +131,15 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
     sens.wall.ref.l = 141;
     sens.wall.ref.r = 170;
 
+    // ゴール座標
+    map.GOAL_X = 3;
+    map.GOAL_Y = 3;
+
     printf("finish parameter\n");
 
     // タスク優先順位 1 ~ 25    25が最高優先度
     xTaskCreatePinnedToCore(myTaskInterrupt,
-                            "interrupt", 8192, &interrupt, configMAX_PRIORITIES, NULL, APP_CPU_NUM);
+                            "interrupt", 8192, &interrupt, configMAX_PRIORITIES, NULL, PRO_CPU_NUM);
     xTaskCreatePinnedToCore(myTaskAdc,
                             "adc", 8192, &adc, configMAX_PRIORITIES - 1, NULL, APP_CPU_NUM);
     xTaskCreatePinnedToCore(myTaskLog,
@@ -162,7 +167,7 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
         {
 
             led.set(0b1111);
-            sens.gyro.ref = imu.surveybias(1000);
+            sens.gyro.ref = imu.surveybias(2000);
             mode_select(&mode, motion, &sens, &val, &control, &map);
             control.control_flag = FALSE;
             break;
@@ -192,12 +197,13 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
             }
             vTaskDelay(pdMS_TO_TICKS(100));
         }
-        // printf("time:%d\n", control.time_count);
+        printf("time:%d\n", control.time_count);
         //printf("vel:%f\n", val.current.vel);
         //printf("rad:%f\n", val.current.rad);
         //printf("BatteryVoltage:%f\n", sens.BatteryVoltage);
+        vTaskDelay(100/portTICK_PERIOD_MS);
     }
-    vTaskDelay(pdMS_TO_TICKS(10));
+    //vTaskDelay(pdMS_TO_TICKS(10));
 }
 
 void set_interface()
@@ -214,17 +220,20 @@ void set_interface()
     ui.push_back(std::make_shared<Test2>());
     ui.push_back(std::make_shared<Test3>());
     ui.push_back(std::make_shared<Test4>());
+    ui.push_back(std::make_shared<Test5>());
+    ui.push_back(std::make_shared<Test6>());
+    ui.push_back(std::make_shared<Test7>());
     ui.push_back(std::make_shared<Log>());
     ui.push_back(std::make_shared<Log1>());
 
-    std::cout << "set_interface" << std::endl;
+    //std::cout << "set_interface" << std::endl;
 }
 
 void call_task(UI *task, Adachi &motion)
 {
     task->ref_by_motion(motion);
     task->main_task();
-    std::cout << "call_task" << std::endl;
+    //std::cout << "call_task" << std::endl;
 }
 
 void set_param(Micromouse *task, t_sens_data *_sen, t_mouse_motion_val *_val, t_control *_control, t_map *_map)
@@ -233,7 +242,7 @@ void set_param(Micromouse *task, t_sens_data *_sen, t_mouse_motion_val *_val, t_
     task->ptr_by_motion(_val);
     task->ptr_by_control(_control);
     task->ptr_by_map(_map);
-    std::cout << "set_param" << std::endl;
+    //std::cout << "set_param" << std::endl;
 }
 
 void mode_select(uint8_t *_mode_num, Adachi &adachi, t_sens_data *sens, t_mouse_motion_val *val, t_control *control, t_map *map)
@@ -241,5 +250,5 @@ void mode_select(uint8_t *_mode_num, Adachi &adachi, t_sens_data *sens, t_mouse_
     set_interface();
     set_param(ui[*_mode_num].get(), sens, val, control, map);
     call_task(ui[*_mode_num].get(), adachi);
-    std::cout << "mode_select" << std::endl;
+    //std::cout << "mode_select" << std::endl;
 }

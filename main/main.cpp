@@ -57,6 +57,6 @@ extern "C" void app_main(void)
     {
         MICROMOUSE( adc, enc_R, enc_L, buzzer, imu, led, motor);
 
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
+        vTaskDelay(100 / portTICK_PERIOD_MS);
     }
 }
