@@ -100,10 +100,10 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
 
     // 角速度
     val.tar.ang_acc = 0.0;
-    val.max.ang_acc = M_PI*2.0;
+    val.max.ang_acc = M_PI*5.0;
     val.tar.ang_vel = 0.0;
     val.max.ang_vel = M_PI;
-    val.min.ang_vel = M_PI/50.0;
+    val.min.ang_vel = M_PI/10.0;
     val.end.ang_vel = 0.0;
 
     // 速度制御

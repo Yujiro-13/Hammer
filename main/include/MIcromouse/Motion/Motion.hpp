@@ -27,6 +27,8 @@ class Motion : public Micromouse
         void back();
         void slalom();
         void check_enkaigei();
+        void turn_left_2();
+        void turn_right_2();
         
     protected:
         t_sens_data *sens;
