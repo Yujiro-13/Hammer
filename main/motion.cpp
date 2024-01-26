@@ -454,7 +454,7 @@ void Motion::turn_right_2()
 void Motion::wall_check()
 {
     sens->wall.control = FALSE;
-    control->control_flag = TRUE;
+    control->control_flag = FALSE;
 
     val->I.vel_error = 0.0;
     val->I.ang_error = 0.0;
@@ -467,7 +467,7 @@ void Motion::wall_check()
 
     while (1)
     {
-        printf("sens.wall.val.fl:%d sens.wall.val.l:%d sens.wall.val.r:%d sens.wall.val.fr:%d\n", sens->wall.val.fl, sens->wall.val.l, sens->wall.val.r, sens->wall.val.fr);
+        printf("sens.wall.val.fl:%d    sens.wall.val.l:%d    sens.wall.val.r:%d    sens.wall.val.fr:%d\n", sens->wall.val.fl, sens->wall.val.l, sens->wall.val.r, sens->wall.val.fr);
         led->set(sens->wall.exist.fl + (sens->wall.exist.l << 1) + (sens->wall.exist.r << 2) + (sens->wall.exist.fr << 3)); // 順番逆かも
         vTaskDelay(1 / portTICK_PERIOD_MS);
     }

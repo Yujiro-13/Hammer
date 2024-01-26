@@ -65,6 +65,7 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
 
     // モーション系
     Adachi motion;
+    motion.set_module(adc, enc_R, enc_L, buzzer, imu, led, motor);
     motion.ptr_by_sensor(&sens);
     motion.ptr_by_motion(&val);
     motion.ptr_by_control(&control);
