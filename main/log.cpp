@@ -36,13 +36,13 @@ void Log::log_print()
             break;
         }
     }
-    std::cout << "Log" << std::endl;
+    //std::cout << "Log" << std::endl;
 }
 
 void Log::main_task()
 {
     log_print();
-    std::cout << "Log" << std::endl;
+    //std::cout << "Log" << std::endl;
 }
 
 void Log1::ptr_by_sensor(t_sens_data *_sens) { sens = _sens; }
