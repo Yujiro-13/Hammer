@@ -188,7 +188,7 @@ typedef struct
     float Duty_l = 0;
     float Duty_r = 0;
     int time_count = 0;
-    t_bool control_flag = FALSE;
+    t_bool flag = FALSE;
     t_motor mot;
     t_odom odom;
     t_bool log_flag = FALSE;

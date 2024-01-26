@@ -170,7 +170,7 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
             led.set(0b1111);
             sens.gyro.ref = imu.surveybias(2000);
             mode_select(&mode, motion, &sens, &val, &control, &map);
-            control.control_flag = FALSE;
+            control.flag = FALSE;
             break;
         }
 

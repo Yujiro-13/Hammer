@@ -34,7 +34,7 @@ void Motion::GetSemphrHandle(SemaphoreHandle_t *_on_logging) { on_logging = _on_
 
 void Motion::run()
 {
-    control->control_flag = TRUE; // 制御ON
+    control->flag = TRUE; // 制御ON
     sens->wall.control = FALSE;   // 壁制御OFF
 
     val->I.vel_error = 0.0;
@@ -81,7 +81,7 @@ void Motion::run()
 
 void Motion::run_half()
 {
-    control->control_flag = TRUE; // 制御ON
+    control->flag = TRUE; // 制御ON
     sens->wall.control = FALSE;   // 壁制御OFF
 
     val->I.vel_error = 0.0;
@@ -130,7 +130,7 @@ void Motion::turn_left()
 {
     vTaskDelay(100);
 
-    control->control_flag = TRUE; // 制御ON
+    control->flag = TRUE; // 制御ON
     sens->wall.control = FALSE;   // 壁制御OFF
     val->current.flag = LEFT;     // 左旋回
 
@@ -159,7 +159,7 @@ void Motion::turn_left()
     }
 
     // std::cout << "##### deceleration #####" << std::endl;
-    control->control_flag = FALSE;
+    control->flag = FALSE;
 
     val->tar.ang_vel = 0.0;
     val->tar.ang_acc = 0.0;
@@ -171,7 +171,7 @@ void Motion::turn_right()
 {
     vTaskDelay(100);
 
-    control->control_flag = TRUE; // 制御ON
+    control->flag = TRUE; // 制御ON
     sens->wall.control = FALSE;   // 壁制御OFF
     val->current.flag = RIGHT;    // 右旋回
 
@@ -201,7 +201,7 @@ void Motion::turn_right()
     }
 
     // std::cout << "##### deceleration #####" << std::endl;
-    control->control_flag = FALSE;
+    control->flag = FALSE;
 
     val->tar.ang_vel = 0.0;
     val->tar.ang_acc = 0.0;
@@ -213,7 +213,7 @@ void Motion::turn_half()
 {
     vTaskDelay(100);
 
-    control->control_flag = TRUE; // 制御ON
+    control->flag = TRUE; // 制御ON
     sens->wall.control = FALSE;   // 壁制御OFF
     val->current.flag = LEFT;     // 左旋回
 
@@ -251,14 +251,14 @@ void Motion::turn_half()
         vTaskDelay(1 / portTICK_PERIOD_MS);
     }
 
-    control->control_flag = FALSE;
+    control->flag = FALSE;
 
     // std::cout << "turn" << std::endl;
 }
 
 void Motion::stop()
 {
-    control->control_flag = TRUE; // 制御ON
+    control->flag = TRUE; // 制御ON
     sens->wall.control = FALSE;   // 壁制御OFF
 
     val->I.vel_error = 0.0;
@@ -299,7 +299,7 @@ void Motion::stop()
         vTaskDelay(1 / portTICK_PERIOD_MS);
     }
 
-    control->control_flag = FALSE; // 制御OFF
+    control->flag = FALSE; // 制御OFF
 
     std::cout << "stop" << std::endl;
 }
@@ -317,7 +317,7 @@ void Motion::slalom()
 void Motion::check_enkaigei()
 {
     sens->wall.control = FALSE;
-    control->control_flag = TRUE;
+    control->flag = TRUE;
 
     val->I.vel_error = 0.0;
     val->I.ang_error = 0.0;
@@ -340,7 +340,7 @@ void Motion::turn_left_2()
 {
     vTaskDelay(100);
 
-    control->control_flag = TRUE; // 制御ON
+    control->flag = TRUE; // 制御ON
     sens->wall.control = FALSE;   // 壁制御OFF
     val->current.flag = LEFT;     // 左旋回
 
@@ -388,7 +388,7 @@ void Motion::turn_left_2()
         vTaskDelay(1 / portTICK_PERIOD_MS);
     }
 
-    control->control_flag = FALSE;
+    control->flag = FALSE;
 
     // std::cout << "turn" << std::endl;
 }
@@ -397,7 +397,7 @@ void Motion::turn_right_2()
 {
     vTaskDelay(100);
 
-    control->control_flag = TRUE; // 制御ON
+    control->flag = TRUE; // 制御ON
     sens->wall.control = FALSE;   // 壁制御OFF
     val->current.flag = RIGHT;    // 右旋回
 
@@ -445,7 +445,7 @@ void Motion::turn_right_2()
         vTaskDelay(1 / portTICK_PERIOD_MS);
     }
 
-    control->control_flag = FALSE;
+    control->flag = FALSE;
 
     // std::cout << "turn" << std::endl;
 }
@@ -454,7 +454,7 @@ void Motion::turn_right_2()
 void Motion::wall_check()
 {
     sens->wall.control = FALSE;
-    control->control_flag = FALSE;
+    control->flag = FALSE;
 
     val->I.vel_error = 0.0;
     val->I.ang_error = 0.0;

@@ -164,7 +164,7 @@ void Interrupt::wall_control() //  壁制御
 
 void Interrupt::feedback_control()
 { // フィードバック制御
-    if (control->control_flag == TRUE)
+    if (control->flag == TRUE)
     {
         // 速度制御
         val->current.vel_error = val->tar.vel - val->current.vel;
