@@ -468,7 +468,7 @@ void Motion::wall_check()
     while (1)
     {
         printf("sens.wall.val.fl:%d    sens.wall.val.l:%d    sens.wall.val.r:%d    sens.wall.val.fr:%d\n", sens->wall.val.fl, sens->wall.val.l, sens->wall.val.r, sens->wall.val.fr);
-        led->set(sens->wall.exist.fl + (sens->wall.exist.l << 1) + (sens->wall.exist.r << 2) + (sens->wall.exist.fr << 3)); // 順番逆かも
+        led->set(sens->wall.exist.fr + (sens->wall.exist.r << 1) + (sens->wall.exist.l << 2) + (sens->wall.exist.fl << 3));
         vTaskDelay(1 / portTICK_PERIOD_MS);
     }
 

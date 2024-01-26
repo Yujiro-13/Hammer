@@ -16,7 +16,7 @@ class Motion : public Micromouse
         void ptr_by_motion(t_mouse_motion_val *val) override;
         void ptr_by_control(t_control *control) override;
         void ptr_by_map(t_map *map) override;
-        void set_module(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot) override;
+        void set_device(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot) override;
         void GetSemphrHandle(SemaphoreHandle_t *_on_logging);
         void run();
         void run_half();
