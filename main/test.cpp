@@ -129,7 +129,7 @@ void Test7::ref_by_motion(Adachi &_adachi) { motion = _adachi; }
 void Test7::main_task()
 {
     control->log_flag = TRUE;
-    motion.run_half();
+    motion.wall_check(); // OK
     std::cout << "Test3" << std::endl;
 }
 

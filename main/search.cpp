@@ -14,7 +14,12 @@ void Search::ref_by_motion(Adachi &_adachi) { motion = _adachi;}
 
 void Search::main_task()
 {
+    val->current.rad = 0.0;
+    map->pos.x = 0;
+    map->pos.y = 0;
+    map->pos.dir = NORTH;
     control->log_flag = TRUE;
+    motion.InitMaze();
     motion.search_adachi(map->GOAL_X,map->GOAL_Y);
     std::cout << "Search" << std::endl;
 }

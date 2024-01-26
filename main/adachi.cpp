@@ -172,6 +172,7 @@ void Adachi::set_wall(int x, int y) // 壁情報を記録
 		map->wall[x - 1][y].east = w_write; // 反対側から見た壁を書き込み
 	}
 	xSemaphoreGive(*on_logging);
+	led->set(sens->wall.exist.fl + (sens->wall.exist.l << 1) + (sens->wall.exist.r << 2) + (sens->wall.exist.fr << 3)); // 順番逆かも
 }
 
 t_bool Adachi::is_unknown(int x, int y) // 指定された区画が未探索か否かを判断する関数 未探索:TRUE　探索済:false

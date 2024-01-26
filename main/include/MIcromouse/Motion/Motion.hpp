@@ -29,6 +29,7 @@ class Motion : public Micromouse
         void check_enkaigei();
         void turn_left_2();
         void turn_right_2();
+        void wall_check();
         
     protected:
         t_sens_data *sens;
@@ -36,6 +37,15 @@ class Motion : public Micromouse
         t_control *control;
         t_map *map;
         SemaphoreHandle_t *on_logging;
+
+        ADC *adc;
+        AS5047P *encR;
+        AS5047P *encL;
+        BUZZER *buz;
+        MPU6500 *imu;
+        PCA9632 *led;
+        Motor *mot;
+
     private:
         uint8_t len_count = 0;
         float local_rad = 0.0;

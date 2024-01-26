@@ -19,7 +19,16 @@ void Motion::ptr_by_control(t_control *_control) { control = _control; }
 
 void Motion::ptr_by_map(t_map *_map) { map = _map; }
 
-void Motion::set_module(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot) {}
+void Motion::set_module(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot)
+{
+    adc = &_adc;
+    encR = &_encR;
+    encL = &_encL;
+    buz = &_buz;
+    imu = &_imu;
+    led = &_led;
+    mot = &_mot;
+}
 
 void Motion::GetSemphrHandle(SemaphoreHandle_t *_on_logging) { on_logging = _on_logging; }
 
@@ -233,11 +242,12 @@ void Motion::turn_half()
     }
 
     // std::cout << "##### deceleration #####" << std::endl;
-    
+
     val->tar.ang_acc = 0.0;
     val->tar.ang_vel = 0.0;
 
-    while(val->current.ang_vel >= 0.01 || val->current.ang_vel <= -0.01){
+    while (val->current.ang_vel >= 0.01 || val->current.ang_vel <= -0.01)
+    {
         vTaskDelay(1 / portTICK_PERIOD_MS);
     }
 
@@ -281,11 +291,10 @@ void Motion::stop()
         vTaskDelay(1 / portTICK_PERIOD_MS);
     }
 
-    
     val->tar.acc = 0.0;
     val->tar.vel = 0.0;
 
-    while(val->current.vel >= 0.0)
+    while (val->current.vel >= 0.0)
     {
         vTaskDelay(1 / portTICK_PERIOD_MS);
     }
@@ -370,15 +379,14 @@ void Motion::turn_left_2()
     }
 
     // std::cout << "##### deceleration #####" << std::endl;
-    
+
     val->tar.ang_acc = 0.0;
     val->tar.ang_vel = 0.0;
 
-    while(val->current.ang_vel >= 0.01 || val->current.ang_vel <= -0.01){
+    while (val->current.ang_vel >= 0.01 || val->current.ang_vel <= -0.01)
+    {
         vTaskDelay(1 / portTICK_PERIOD_MS);
     }
-
-    
 
     control->control_flag = FALSE;
 
@@ -432,12 +440,37 @@ void Motion::turn_right_2()
     val->tar.ang_vel = 0.0;
 
     // std::cout << "##### deceleration #####" << std::endl;
-    while(val->current.ang_vel >= 0.01 || val->current.ang_vel <= -0.01){
+    while (val->current.ang_vel >= 0.01 || val->current.ang_vel <= -0.01)
+    {
         vTaskDelay(1 / portTICK_PERIOD_MS);
     }
 
     control->control_flag = FALSE;
 
-
     // std::cout << "turn" << std::endl;
+}
+
+
+void Motion::wall_check()
+{
+    sens->wall.control = FALSE;
+    control->control_flag = TRUE;
+
+    val->I.vel_error = 0.0;
+    val->I.ang_error = 0.0;
+    val->I.wall_error = 0.0;
+
+    val->tar.vel = 0.0;
+    val->tar.acc = 0.0;
+    val->tar.ang_vel = 0.0;
+    val->tar.ang_acc = 0.0;
+
+    while (1)
+    {
+        printf("sens.wall.val.fl:%d sens.wall.val.l:%d sens.wall.val.r:%d sens.wall.val.fr:%d\n", sens->wall.val.fl, sens->wall.val.l, sens->wall.val.r, sens->wall.val.fr);
+        led->set(sens->wall.exist.fl + (sens->wall.exist.l << 1) + (sens->wall.exist.r << 2) + (sens->wall.exist.fr << 3)); // 順番逆かも
+        vTaskDelay(1 / portTICK_PERIOD_MS);
+    }
+
+    std::cout << "check_enkaigei" << std::endl;
 }
