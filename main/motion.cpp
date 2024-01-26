@@ -19,7 +19,7 @@ void Motion::ptr_by_control(t_control *_control) { control = _control; }
 
 void Motion::ptr_by_map(t_map *_map) { map = _map; }
 
-void Motion::set_module(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot)
+void Motion::set_device(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot)
 {
     adc = &_adc;
     encR = &_encR;

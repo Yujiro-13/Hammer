@@ -54,7 +54,7 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
 
     // 制御系
     Interrupt interrupt;
-    interrupt.set_module(adc, enc_R, enc_L, buzzer, imu, led, motor);
+    interrupt.set_device(adc, enc_R, enc_L, buzzer, imu, led, motor);
     interrupt.ptr_by_sensor(&sens);
     interrupt.ptr_by_motion(&val);
     interrupt.ptr_by_control(&control);
@@ -65,7 +65,7 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
 
     // モーション系
     Adachi motion;
-    motion.set_module(adc, enc_R, enc_L, buzzer, imu, led, motor);
+    motion.set_device(adc, enc_R, enc_L, buzzer, imu, led, motor);
     motion.ptr_by_sensor(&sens);
     motion.ptr_by_motion(&val);
     motion.ptr_by_control(&control);

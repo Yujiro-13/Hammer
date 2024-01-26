@@ -8,7 +8,7 @@ void Test::ptr_by_control(t_control *_control) { control = _control; }
 
 void Test::ptr_by_map(t_map *_map) { map = _map; }
 
-void Test::set_module(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot) {}
+void Test::set_device(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot) {}
 
 void Test::ref_by_motion(Adachi &_adachi) { motion = _adachi; }
 
@@ -27,7 +27,7 @@ void Test2::ptr_by_control(t_control *_control) { control = _control; }
 
 void Test2::ptr_by_map(t_map *_map) { map = _map; }
 
-void Test2::set_module(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot) {}
+void Test2::set_device(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot) {}
 
 void Test2::ref_by_motion(Adachi &_adachi) { motion = _adachi; }
 
@@ -46,7 +46,7 @@ void Test3::ptr_by_control(t_control *_control) { control = _control; }
 
 void Test3::ptr_by_map(t_map *_map) { map = _map; }
 
-void Test3::set_module(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot) {}
+void Test3::set_device(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot) {}
 
 void Test3::ref_by_motion(Adachi &_adachi) { motion = _adachi; }
 
@@ -65,7 +65,7 @@ void Test4::ptr_by_control(t_control *_control) { control = _control; }
 
 void Test4::ptr_by_map(t_map *_map) { map = _map; }
 
-void Test4::set_module(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot) {}
+void Test4::set_device(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot) {}
 
 void Test4::ref_by_motion(Adachi &_adachi) { motion = _adachi; }
 
@@ -84,7 +84,7 @@ void Test5::ptr_by_control(t_control *_control) { control = _control; }
 
 void Test5::ptr_by_map(t_map *_map) { map = _map; }
 
-void Test5::set_module(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot) {}
+void Test5::set_device(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot) {}
 
 void Test5::ref_by_motion(Adachi &_adachi) { motion = _adachi; }
 
@@ -103,7 +103,7 @@ void Test6::ptr_by_control(t_control *_control) { control = _control; }
 
 void Test6::ptr_by_map(t_map *_map) { map = _map; }
 
-void Test6::set_module(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot) {}
+void Test6::set_device(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot) {}
 
 void Test6::ref_by_motion(Adachi &_adachi) { motion = _adachi; }
 
@@ -122,7 +122,7 @@ void Test7::ptr_by_control(t_control *_control) { control = _control; }
 
 void Test7::ptr_by_map(t_map *_map) { map = _map; }
 
-void Test7::set_module(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot) {}
+void Test7::set_device(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot) {}
 
 void Test7::ref_by_motion(Adachi &_adachi) { motion = _adachi; }
 

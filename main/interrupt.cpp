@@ -19,7 +19,7 @@ void Interrupt::ptr_by_control(t_control *_control) { control = _control; }
 
 void Interrupt::ptr_by_map(t_map *_map) { map = _map; }
 
-void Interrupt::set_module(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot)
+void Interrupt::set_device(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot)
 {
     adc = &_adc;
     encR = &_encR;
@@ -28,7 +28,7 @@ void Interrupt::set_module(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_b
     imu = &_imu;
     led = &_led;
     mot = &_mot;
-    std::cout << "set_module" << std::endl;
+    std::cout << "set_device" << std::endl;
 }
 
 void Interrupt::GetSemphrHandle(SemaphoreHandle_t *_on_logging) { on_logging = _on_logging; }

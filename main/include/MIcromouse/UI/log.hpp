@@ -15,7 +15,7 @@ class Log : public UI
         void ptr_by_motion(t_mouse_motion_val *_val) override;
         void ptr_by_control(t_control *_control) override;
         void ptr_by_map(t_map *_map) override;
-        void set_module(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot) override;
+        void set_device(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot) override;
         void main_task() override;
         void ref_by_motion(Adachi &_adachi) override;
         void log_print();
@@ -34,7 +34,7 @@ class Log1 : public UI
         void ptr_by_motion(t_mouse_motion_val *_val) override;
         void ptr_by_control(t_control *_control) override;
         void ptr_by_map(t_map *_map) override;
-        void set_module(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot) override;
+        void set_device(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot) override;
         void main_task() override;
         void ref_by_motion(Adachi &_adachi) override;
         void log_print();

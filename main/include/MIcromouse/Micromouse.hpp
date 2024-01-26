@@ -26,7 +26,7 @@ Interface Micromouse
     virtual void ptr_by_motion(t_mouse_motion_val *_val) = 0;
     virtual void ptr_by_control(t_control *_control) = 0;
     virtual void ptr_by_map(t_map *_map) = 0;
-    virtual void set_module(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot) = 0;
+    virtual void set_device(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot) = 0;
 };
 
 

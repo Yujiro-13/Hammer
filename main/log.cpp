@@ -8,7 +8,7 @@ void Log::ptr_by_control(t_control *_control) { control = _control; }
 
 void Log::ptr_by_map(t_map *_map) { map = _map; }
 
-void Log::set_module(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot){}
+void Log::set_device(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot){}
 
 void Log::ref_by_motion(Adachi &_adachi) {}
 
@@ -53,7 +53,7 @@ void Log1::ptr_by_control(t_control *_control) { control = _control; }
 
 void Log1::ptr_by_map(t_map *_map) { map = _map; }
 
-void Log1::set_module(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot){}
+void Log1::set_device(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot){}
 
 void Log1::ref_by_motion(Adachi &_adachi) {}
 
