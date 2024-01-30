@@ -19,5 +19,6 @@ set(COMPONENT_SRCS
     "PCA9632.cpp"
     "search.cpp"
     "test.cpp"
+    "files.cpp"
    )
 register_component()

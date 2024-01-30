@@ -220,6 +220,19 @@ typedef struct
     uint8_t GOAL_Y = 0;
 }t_map;     //map data
 
+typedef struct
+{
+    float speed_Kp = 0;
+    float speed_Ki = 0;
+    float speed_Kd = 0;
+    float ang_vel_Kp = 0;
+    float ang_vel_Ki = 0;
+    float ang_vel_Kd = 0;
+    float wall_Kp = 0;
+    float wall_Ki = 0;
+    float wall_Kd = 0;
+}t_file_pid_gain;  //parameter file
+
 
 
 #endif // STRUCTS_HPP

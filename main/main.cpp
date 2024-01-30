@@ -10,6 +10,7 @@
 #include "esp_system.h"
 #include "MIcromouse/Base_task.hpp"
 #include "include/MIcromouse/interrupt.hpp"
+#include "include/files.hpp"
 
 /*
     モード一覧
@@ -61,7 +62,7 @@ extern "C" void app_main(void)
 
     // motor.sincurve();
 
-    const char *TAG = "file_example";
+    /*const char *TAG = "file_example";
     const char *PARTITION_LABEL = "storage";
     const std::string BASE_PATH = "/param";
     const std::string FILE_PATH = BASE_PATH + "/pid.txt";
@@ -91,11 +92,11 @@ extern "C" void app_main(void)
     if(ifile.fail())
     {
         ESP_LOGE(TAG, "Failed to open %s for reading", FILE_PATH.c_str());
-        return;
+        //return;
     }else{
         std::string str;
         getline(ifile, str);
-        target_param = std::stoi(str);
+        //target_param = std::stoi(str);
 
         ESP_LOGI(TAG, "target_param: %d", target_param);
     }
@@ -106,7 +107,7 @@ extern "C" void app_main(void)
     if(ffile.fail())
     {
         ESP_LOGE(TAG, "Failed to open %s for writing", FILE_PATH.c_str());
-        return;
+        //return;
     }else{
         ffile << target_param + 1 << std::endl;
         ffile.close();
@@ -114,13 +115,17 @@ extern "C" void app_main(void)
     }
 
     ESP_LOGI(TAG, "Umounting FATFS");
-    esp_vfs_fat_spiflash_unmount(BASE_PATH.c_str(), wl_handle);
+    esp_vfs_fat_spiflash_unmount(BASE_PATH.c_str(), wl_handle);*/
+
+    init_files();
 
     while (1)
     {
 
-        //MICROMOUSE(adc, enc_R, enc_L, buzzer, imu, led, motor);
+        MICROMOUSE(adc, enc_R, enc_L, buzzer, imu, led, motor);
 
         vTaskDelay(100 / portTICK_PERIOD_MS);
     }
+    
+    unmount_fat();
 }
