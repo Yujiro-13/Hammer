@@ -233,6 +233,18 @@ typedef struct
     float wall_Kd = 0;
 }t_file_pid_gain;  //parameter file
 
+typedef struct
+{
+    uint16_t th_wall_fl = 0;
+    uint16_t th_wall_l = 0;
+    uint16_t th_wall_r = 0;
+    uint16_t th_wall_fr = 0;
+    uint16_t th_control_l = 0;
+    uint16_t th_control_r = 0;
+    uint16_t ref_l = 0;
+    uint16_t ref_r = 0;
+}t_file_wall_th;   //wall threshold file
+
 
 
 #endif // STRUCTS_HPP

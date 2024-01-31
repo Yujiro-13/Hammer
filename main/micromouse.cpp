@@ -45,6 +45,7 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
     t_control control;
     t_map map;
     t_file_pid_gain pid_gain;
+    t_file_wall_th walll_threshold;
 
     printf("finish struct\n");
 
@@ -85,6 +86,7 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
 
     /* パラメータの設定 */
     pid_gain = read_file_pid();
+    walll_threshold = read_file_wall_th();
 
     // 距離
     val.tar.len = 0.09;
@@ -200,7 +202,7 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
             vTaskDelay(pdMS_TO_TICKS(100));
         }
         //printf("time:%d\n", control.time_count);
-        //printf("vel:%f\n", val.current.vel);
+        printf("vel:%f\n", val.current.vel);
         //printf("rad:%f\n", val.current.rad);
         //printf("BatteryVoltage:%f\n", sens.BatteryVoltage);
         //printf("sens.wall.val.fl:%d sens.wall.val.l:%d sens.wall.val.r:%d sens.wall.val.fr:%d\n", sens.wall.val.fl, sens.wall.val.l, sens.wall.val.r, sens.wall.val.fr);

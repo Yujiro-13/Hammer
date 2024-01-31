@@ -552,3 +552,78 @@ void Motion::set_pid_gain()
 
     printf("set_pid_gain\n");
 }
+
+void Motion::adjust_wall_threshold(const char *threshold, uint16_t *th_value, uint8_t step, uint8_t mode_num)
+{
+
+    while (1)
+    {
+        led->set(mode_num + 1);
+
+        if (sens->wall.val.fl + sens->wall.val.l + sens->wall.val.r + sens->wall.val.fr > 3000)
+        {
+            led->set(0b1111);
+            printf("adjust %s\n", threshold);
+            vTaskDelay(1000 / portTICK_PERIOD_MS);
+            return;
+        }
+
+        if (val->current.vel > 0.02)
+        {
+            if (mode_num >= MODE_MAX)
+            {
+                mode_num = MODE_MIN;
+            }
+            else
+            {
+                *th_value += step;
+            }
+            vTaskDelay(pdMS_TO_TICKS(100));
+        }
+        if (val->current.vel < -0.02)
+        {
+            if (mode_num <= MODE_MIN)
+            {
+                mode_num = MODE_MAX;
+            }
+            else
+            {
+                *th_value -= step;
+            }
+            vTaskDelay(pdMS_TO_TICKS(100));
+        }
+
+        printf("%s : %d\n", threshold, *th_value);
+
+        vTaskDelay(100 / portTICK_PERIOD_MS);
+    }
+}
+
+void Motion::set_wall_threshold()
+{
+    uint8_t mode = 0;
+
+    const char *th_wall_fl = "th_wall_fl";
+    const char *th_wall_l = "th_wall_l";
+    const char *th_wall_r = "th_wall_r";
+    const char *th_wall_fr = "th_wall_fr";
+    const char *th_control_l = "th_control_l";
+    const char *th_control_r = "th_control_r";
+    const char *ref_l = "ref_l";
+    const char *ref_r = "ref_r";
+
+    t_file_wall_th th_value = read_file_wall_th();
+
+    adjust_wall_threshold(th_wall_fl, &th_value.th_wall_fl, 1, mode);
+    adjust_wall_threshold(th_wall_l, &th_value.th_wall_l, 1, mode + 1);
+    adjust_wall_threshold(th_wall_r, &th_value.th_wall_r, 1, mode + 2);
+    adjust_wall_threshold(th_wall_fr, &th_value.th_wall_fr, 1, mode + 3);
+    adjust_wall_threshold(th_control_l, &th_value.th_control_l, 1, mode + 4);
+    adjust_wall_threshold(th_control_r, &th_value.th_control_r, 1, mode + 5);
+    adjust_wall_threshold(ref_l, &th_value.ref_l, 1, mode + 6);
+    adjust_wall_threshold(ref_r, &th_value.ref_r, 1, mode + 7);
+
+    write_file_wall_th(&th_value);
+
+    printf("set_pid_gain\n");
+}

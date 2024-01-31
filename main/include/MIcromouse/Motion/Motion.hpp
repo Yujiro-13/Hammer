@@ -32,6 +32,8 @@ class Motion : public Micromouse
         void wall_check();
         void adjust_pid(const char* gain, float *pid, float step, uint8_t mode_num);
         void set_pid_gain();
+        void adjust_wall_threshold(const char* threshold, uint16_t *th_value, uint8_t step, uint8_t mode_num);
+        void set_wall_threshold();
         
     protected:
         t_sens_data *sens;

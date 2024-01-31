@@ -93,7 +93,7 @@ void Test5::ref_by_motion(Adachi &_adachi) { motion = _adachi; }
 void Test5::main_task()
 {   
     motion.set_pid_gain();
-    
+    motion.set_wall_threshold();
     std::cout << "Test" << std::endl;
 }
 
