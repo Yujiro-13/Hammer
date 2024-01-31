@@ -5,7 +5,7 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/semphr.h>    // freertos以下のファイルをインクルードしたい場合、必ず先にFreeRTOS.hをインクルードする
 #include "../Micromouse.hpp"
-//#include "../Micromouse/interrupt.hpp"
+#include "include/files.hpp"
 
 class Motion : public Micromouse
 {
@@ -30,6 +30,8 @@ class Motion : public Micromouse
         void turn_left_2();
         void turn_right_2();
         void wall_check();
+        void adjust_pid(const char* gain, float *pid, float step, uint8_t mode_num);
+        void set_pid_gain();
         
     protected:
         t_sens_data *sens;

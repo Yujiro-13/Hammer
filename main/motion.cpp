@@ -1,5 +1,7 @@
 #include "include/Micromouse/Motion/motion.hpp"
 
+#define MODE_MAX 15
+#define MODE_MIN 0
 #define SECTION 0.09
 #define SECTION_HALF 0.045
 #define TURN_HALF M_PI
@@ -34,8 +36,8 @@ void Motion::GetSemphrHandle(SemaphoreHandle_t *_on_logging) { on_logging = _on_
 
 void Motion::run()
 {
-    control->flag = TRUE; // 制御ON
-    sens->wall.control = FALSE;   // 壁制御OFF
+    control->flag = TRUE;       // 制御ON
+    sens->wall.control = FALSE; // 壁制御OFF
 
     val->I.vel_error = 0.0;
     val->I.ang_error = 0.0;
@@ -81,8 +83,8 @@ void Motion::run()
 
 void Motion::run_half()
 {
-    control->flag = TRUE; // 制御ON
-    sens->wall.control = FALSE;   // 壁制御OFF
+    control->flag = TRUE;       // 制御ON
+    sens->wall.control = FALSE; // 壁制御OFF
 
     val->I.vel_error = 0.0;
     val->I.ang_error = 0.0;
@@ -130,9 +132,9 @@ void Motion::turn_left()
 {
     vTaskDelay(100);
 
-    control->flag = TRUE; // 制御ON
-    sens->wall.control = FALSE;   // 壁制御OFF
-    val->current.flag = LEFT;     // 左旋回
+    control->flag = TRUE;       // 制御ON
+    sens->wall.control = FALSE; // 壁制御OFF
+    val->current.flag = LEFT;   // 左旋回
 
     val->I.vel_error = 0.0;
     val->I.ang_error = 0.0;
@@ -171,9 +173,9 @@ void Motion::turn_right()
 {
     vTaskDelay(100);
 
-    control->flag = TRUE; // 制御ON
-    sens->wall.control = FALSE;   // 壁制御OFF
-    val->current.flag = RIGHT;    // 右旋回
+    control->flag = TRUE;       // 制御ON
+    sens->wall.control = FALSE; // 壁制御OFF
+    val->current.flag = RIGHT;  // 右旋回
 
     val->I.vel_error = 0.0;
     val->I.ang_error = 0.0;
@@ -213,9 +215,9 @@ void Motion::turn_half()
 {
     vTaskDelay(100);
 
-    control->flag = TRUE; // 制御ON
-    sens->wall.control = FALSE;   // 壁制御OFF
-    val->current.flag = LEFT;     // 左旋回
+    control->flag = TRUE;       // 制御ON
+    sens->wall.control = FALSE; // 壁制御OFF
+    val->current.flag = LEFT;   // 左旋回
 
     val->I.vel_error = 0.0;
     val->I.ang_error = 0.0;
@@ -258,8 +260,8 @@ void Motion::turn_half()
 
 void Motion::stop()
 {
-    control->flag = TRUE; // 制御ON
-    sens->wall.control = FALSE;   // 壁制御OFF
+    control->flag = TRUE;       // 制御ON
+    sens->wall.control = FALSE; // 壁制御OFF
 
     val->I.vel_error = 0.0;
     val->I.ang_error = 0.0;
@@ -340,9 +342,9 @@ void Motion::turn_left_2()
 {
     vTaskDelay(100);
 
-    control->flag = TRUE; // 制御ON
-    sens->wall.control = FALSE;   // 壁制御OFF
-    val->current.flag = LEFT;     // 左旋回
+    control->flag = TRUE;       // 制御ON
+    sens->wall.control = FALSE; // 壁制御OFF
+    val->current.flag = LEFT;   // 左旋回
 
     val->I.vel_error = 0.0;
     val->I.ang_error = 0.0;
@@ -397,9 +399,9 @@ void Motion::turn_right_2()
 {
     vTaskDelay(100);
 
-    control->flag = TRUE; // 制御ON
-    sens->wall.control = FALSE;   // 壁制御OFF
-    val->current.flag = RIGHT;    // 右旋回
+    control->flag = TRUE;       // 制御ON
+    sens->wall.control = FALSE; // 壁制御OFF
+    val->current.flag = RIGHT;  // 右旋回
 
     val->I.vel_error = 0.0;
     val->I.ang_error = 0.0;
@@ -450,7 +452,6 @@ void Motion::turn_right_2()
     // std::cout << "turn" << std::endl;
 }
 
-
 void Motion::wall_check()
 {
     sens->wall.control = FALSE;
@@ -473,4 +474,78 @@ void Motion::wall_check()
     }
 
     std::cout << "check_enkaigei" << std::endl;
+}
+
+void Motion::adjust_pid(const char* gain, float *pid, float step, uint8_t mode_num)
+{
+
+    while (1)
+    {
+        led->set(mode_num + 1);
+
+        if (sens->wall.val.fl + sens->wall.val.l + sens->wall.val.r + sens->wall.val.fr > 3000)
+        {
+            led->set(0b1111);
+            break;
+        }
+
+        if (val->current.vel > 0.02)
+        {
+            if (mode_num >= MODE_MAX)
+            {
+                mode_num = MODE_MIN;
+            }
+            else
+            {
+                *pid += step;
+            }
+            vTaskDelay(pdMS_TO_TICKS(100));
+        }
+        if (val->current.vel < -0.02)
+        {
+            if (mode_num <= MODE_MIN)
+            {
+                mode_num = MODE_MAX;
+            }
+            else
+            {
+                *pid -= step;
+            }
+            vTaskDelay(pdMS_TO_TICKS(100));
+        }
+
+        printf("%s : %f\n", gain, *pid);
+
+        vTaskDelay(100 / portTICK_PERIOD_MS);
+    }
+}
+
+void Motion::set_pid_gain()
+{
+    uint8_t mode = 0;
+
+    const char *speed_Kp = "speed_Kp";
+    const char *speed_Ki = "speed_Ki";
+    const char *speed_Kd = "speed_Kd";
+    const char *ang_vel_Kp = "ang_vel_Kp";
+    const char *ang_vel_Ki = "ang_vel_Ki";
+    const char *ang_vel_Kd = "ang_vel_Kd";
+    const char *wall_Kp = "wall_Kp";
+    const char *wall_Ki = "wall_Ki";
+    const char *wall_Kd = "wall_Kd";
+
+    t_file_pid_gain pid_gain = read_file_pid();
+
+    adjust_pid(speed_Kp, &pid_gain.speed_Kp, 0.1, mode);
+    adjust_pid(speed_Ki, &pid_gain.speed_Ki, 0.1, mode + 1);
+    adjust_pid(speed_Kd, &pid_gain.speed_Kd, 0.1, mode + 2);
+    adjust_pid(ang_vel_Kp, &pid_gain.ang_vel_Kp, 0.1, mode + 3);
+    adjust_pid(ang_vel_Ki, &pid_gain.ang_vel_Ki, 0.1, mode + 4);
+    adjust_pid(ang_vel_Kd, &pid_gain.ang_vel_Kd, 0.1, mode + 5);
+    adjust_pid(wall_Kp, &pid_gain.wall_Kp, 0.1, mode + 6);
+    adjust_pid(wall_Ki, &pid_gain.wall_Ki, 0.1, mode + 7);
+    adjust_pid(wall_Kd, &pid_gain.wall_Kd, 0.1, mode + 8);
+    write_files(&pid_gain);
+
+    printf("set_pid_gain\n");
 }

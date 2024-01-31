@@ -1,5 +1,7 @@
 #include "include/Micromouse/UI/test.hpp"
 
+
+
 void Test::ptr_by_sensor(t_sens_data *_sens) { sens = _sens; }
 
 void Test::ptr_by_motion(t_mouse_motion_val *_val) { val = _val; }
@@ -90,8 +92,8 @@ void Test5::ref_by_motion(Adachi &_adachi) { motion = _adachi; }
 
 void Test5::main_task()
 {   
-    control->log_flag = TRUE;
-    motion.turn_half();
+    motion.set_pid_gain();
+    
     std::cout << "Test" << std::endl;
 }
 
