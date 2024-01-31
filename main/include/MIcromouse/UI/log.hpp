@@ -1,11 +1,17 @@
 #ifndef LOG_HPP
 #define LOG_HPP
 
+#include <fstream>
+#include <iostream>
+#include <string>
 #include "esp_flash_spi_init.h"
 #include "esp_partition.h"
 #include "esp_log.h"
 #include "esp_flash.h"
 #include "spi_flash_mmap.h"
+#include "esp_vfs.h"
+#include "esp_vfs_fat.h"
+#include "esp_system.h"
 #include "UI.hpp"
 
 class Log : public UI
