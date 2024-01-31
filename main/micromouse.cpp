@@ -44,6 +44,7 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
     t_mouse_motion_val val;
     t_control control;
     t_map map;
+    t_file_pid_gain pid_gain;
 
     printf("finish struct\n");
 
@@ -83,6 +84,7 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
     printf("finish sensor struct\n");
 
     /* パラメータの設定 */
+    pid_gain = read_file_pid();
 
     // 距離
     val.tar.len = 0.09;

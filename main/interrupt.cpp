@@ -294,7 +294,7 @@ void Interrupt::logging()
     uint32_t mem_offset = 0;
     int16_t adcs[10];
 
-    ESP_LOGE("logging", "start logging");
+    ESP_LOGI("logging", "start logging");
 
     while (1)
     {

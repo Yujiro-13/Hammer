@@ -476,7 +476,7 @@ void Motion::wall_check()
     std::cout << "check_enkaigei" << std::endl;
 }
 
-void Motion::adjust_pid(const char* gain, float *pid, float step, uint8_t mode_num)
+void Motion::adjust_pid(const char *gain, float *pid, float step, uint8_t mode_num)
 {
 
     while (1)
@@ -486,7 +486,9 @@ void Motion::adjust_pid(const char* gain, float *pid, float step, uint8_t mode_n
         if (sens->wall.val.fl + sens->wall.val.l + sens->wall.val.r + sens->wall.val.fr > 3000)
         {
             led->set(0b1111);
-            break;
+            printf("adjust %s\n", gain);
+            vTaskDelay(1000 / portTICK_PERIOD_MS);
+            return;
         }
 
         if (val->current.vel > 0.02)
@@ -545,7 +547,8 @@ void Motion::set_pid_gain()
     adjust_pid(wall_Kp, &pid_gain.wall_Kp, 0.1, mode + 6);
     adjust_pid(wall_Ki, &pid_gain.wall_Ki, 0.1, mode + 7);
     adjust_pid(wall_Kd, &pid_gain.wall_Kd, 0.1, mode + 8);
-    write_files(&pid_gain);
+
+    write_file_pid(&pid_gain);
 
     printf("set_pid_gain\n");
 }

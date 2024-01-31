@@ -11,6 +11,6 @@
 #include "structs.hpp"
 
 void init_files();
-void write_files(t_file_pid_gain *write_gain);
+void write_file_pid(t_file_pid_gain *write_gain);
 t_file_pid_gain read_file_pid();
 void unmount_fat();
