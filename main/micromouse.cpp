@@ -112,29 +112,29 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
     val.end.ang_vel = 0.0;
 
     // 速度制御
-    control.v.Kp = 5.0;
-    control.v.Ki = 500.0;
-    control.v.Kd = 0.0;
+    control.v.Kp = pid_gain.speed_Kp;
+    control.v.Ki = pid_gain.speed_Ki;
+    control.v.Kd = pid_gain.speed_Kd;
 
     // 角速度制御
-    control.o.Kp = 0.50;
-    control.o.Ki = 100.0;
-    control.o.Kd = 0.0;
+    control.o.Kp = pid_gain.ang_vel_Kp;
+    control.o.Ki = pid_gain.ang_vel_Ki;
+    control.o.Kd = pid_gain.ang_vel_Kd;
 
     // 壁制御
-    control.wall.Kp = 0.005;
-    control.wall.Ki = 0.0;
-    control.wall.Kd = 0.0;
+    control.wall.Kp = pid_gain.wall_Kp;
+    control.wall.Ki = pid_gain.wall_Ki;
+    control.wall.Kd = pid_gain.wall_Kd;
 
     // 壁センサ閾値
-    sens.wall.th_wall.fl = 42;
-    sens.wall.th_wall.fr = 47;
-    sens.wall.th_wall.l = 41;
-    sens.wall.th_wall.r = 55;
-    sens.wall.th_control.l = 100;
-    sens.wall.th_control.r = 100;
-    sens.wall.ref.l = 141;
-    sens.wall.ref.r = 170;
+    sens.wall.th_wall.fl = walll_threshold.th_wall_fl;
+    sens.wall.th_wall.fr = walll_threshold.th_wall_fr;
+    sens.wall.th_wall.l = walll_threshold.th_wall_l;
+    sens.wall.th_wall.r = walll_threshold.th_wall_r;
+    sens.wall.th_control.l = walll_threshold.th_control_l;
+    sens.wall.th_control.r = walll_threshold.th_control_r;
+    sens.wall.ref.l = walll_threshold.ref_l;
+    sens.wall.ref.r = walll_threshold.ref_r;
 
     // ゴール座標
     map.GOAL_X = 3;
@@ -202,7 +202,7 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
             vTaskDelay(pdMS_TO_TICKS(100));
         }
         //printf("time:%d\n", control.time_count);
-        printf("vel:%f\n", val.current.vel);
+        //printf("vel:%f\n", val.current.vel);
         //printf("rad:%f\n", val.current.rad);
         //printf("BatteryVoltage:%f\n", sens.BatteryVoltage);
         //printf("sens.wall.val.fl:%d sens.wall.val.l:%d sens.wall.val.r:%d sens.wall.val.fr:%d\n", sens.wall.val.fl, sens.wall.val.l, sens.wall.val.r, sens.wall.val.fr);
