@@ -16,3 +16,5 @@ t_file_pid_gain read_file_pid();
 void write_file_wall_th(t_file_wall_th *write_th);
 t_file_wall_th read_file_wall_th();
 void unmount_fat();
+void map_write(t_map *map);
+t_map map_read();

@@ -1,11 +1,16 @@
 #include "files.hpp"
 
+#define MAZESIZE_X 32
+#define MAZESIZE_Y 32
+
 const char *PID_FILE_TAG = "file_pid";
 const char *WALL_TH_FILE_TAG = "file_wall_th";
+const char *MAP_FILE_TAG = "file_map";
 const char *PARTITION_LABEL = "storage";
 const std::string BASE_PATH = "/param";
 const std::string PID_FILE_PATH = BASE_PATH + "/pid.txt";
 const std::string WALL_TH_FILE_PATH = BASE_PATH + "/wall_th.txt";
+const std::string MAP_FILE_PATH = BASE_PATH + "/map.txt";
 const esp_vfs_fat_mount_config_t MOUNT_CONFIG = {
     .format_if_mount_failed = true,
     .max_files = 4,
@@ -299,7 +304,6 @@ t_file_wall_th read_file_wall_th()
                 }
             }
 
-
             line_number++;
         }
 
@@ -321,4 +325,45 @@ void unmount_fat()
 {
     ESP_LOGI(BASE_PATH.c_str(), "Umounting FATFS");
     esp_vfs_fat_spiflash_unmount(BASE_PATH.c_str(), wl_handle);
+}
+
+void map_write(t_map *map)
+{
+    std::ofstream ffile(MAP_FILE_PATH, std::ios::out);
+    if (ffile.fail())
+    {
+        ESP_LOGE(MAP_FILE_TAG, "Failed to open %s for writing", "/map.txt");
+        // return;
+    }
+    else
+    {
+        ffile.write(reinterpret_cast<const char*>(map), sizeof(t_map));
+
+        ffile.close();
+    }
+}
+
+t_map map_read()
+{
+    t_map map;
+
+    ESP_LOGI(MAP_FILE_TAG, "Opening file");
+    std::ifstream ifile(MAP_FILE_PATH, std::ios::in);
+    if (ifile.fail())
+    {
+        std::cerr << "Failed to open " << MAP_FILE_PATH << " for reading" << std::endl;
+    }
+    else
+    {
+        ifile.read(reinterpret_cast<char*>(&map), sizeof(t_map));
+
+        ifile.close();
+
+        ESP_LOGI(MAP_FILE_TAG, "read file wall north : %d", map.wall[0][0].north);
+        ESP_LOGI(MAP_FILE_TAG, "read file wall east: %d", map.wall[0][0].east);
+        ESP_LOGI(MAP_FILE_TAG, "read file wall south : %d", map.wall[0][0].south);
+        ESP_LOGI(MAP_FILE_TAG, "read file wall west: %d", map.wall[0][0].west);
+    }
+
+    return map;
 }
