@@ -18,6 +18,7 @@ void Test::main_task()
 {   
     control->log_flag = TRUE;
     motion.check_enkaigei(); // ok
+    control->log_flag = FALSE;
     std::cout << "Test" << std::endl;
 }
 
@@ -37,6 +38,7 @@ void Test2::main_task()
 {
     control->log_flag = TRUE;
     motion.run();
+    control->log_flag = FALSE;
     std::cout << "Test2" << std::endl;
 }
 
@@ -56,6 +58,7 @@ void Test3::main_task()
 {
     control->log_flag = TRUE;
     motion.turn_left_2(); // ok
+    control->log_flag = FALSE;
     std::cout << "Test3" << std::endl;
 }
 
@@ -75,6 +78,7 @@ void Test4::main_task()
 {
     control->log_flag = TRUE;
     motion.turn_right_2(); // ok
+    control->log_flag = FALSE;
     std::cout << "Test4" << std::endl;
 }
 
@@ -113,6 +117,7 @@ void Test6::main_task()
 {
     control->log_flag = TRUE;
     motion.stop();  // OK
+    control->log_flag = FALSE;
     std::cout << "Test2" << std::endl;
 }
 
@@ -132,6 +137,7 @@ void Test7::main_task()
 {
     control->log_flag = TRUE;
     motion.wall_check(); // OK
+    control->log_flag = FALSE;
     std::cout << "Test3" << std::endl;
 }
 

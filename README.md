@@ -46,3 +46,12 @@
 │   └── UI.cpp
 └── README.md                  
 ```
+
+### partitions.csv
+```
+nvs,data,nvs,0x9000,16K,
+phy_init,data,phy,0xd000,4K,
+logs,data,spiffs,0xe000,1M,
+storage,data,fat,0x10e000,1M,
+factory,app,factory,0x210000,1M,
+```

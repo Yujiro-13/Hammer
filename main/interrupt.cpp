@@ -238,12 +238,13 @@ void Interrupt::calc_distance()
 
     if (!imu->in_survaeybias)
     { // サーベイバイアス中は加速度を計算しない
-        _accel = (imu->accelY() * 9.80665) * 0.001;
+        val->current.acc = (imu->accelY() * 9.80665) * 0.001;
     }
 
     float _vel = (val->l.vel + val->r.vel) / 2.0;
+    
     // val->current.vel = _vel;
-    val->current.vel = val->current.alpha * (val->current.vel + _accel) + (1.0 - val->current.alpha) * _vel;
+    val->current.vel = val->current.alpha * (val->current.vel + val->current.acc) + (1.0 - val->current.alpha) * _vel;
     val->current.len += val->current.vel * 0.001;
     // std::cout << "val->current.vel : " << val->current.vel << std::endl;
 
@@ -306,11 +307,11 @@ void Interrupt::logging()
             adcs[2] = sens->wall.val.r;
             adcs[3] = sens->wall.val.fr;
             adcs[4] = (uint16_t)(sens->BatteryVoltage * 1000);
-            adcs[5] = sens->wall.exist.fl;
-            adcs[6] = sens->wall.exist.l;
-            adcs[7] = sens->wall.exist.r;
-            adcs[8] = sens->wall.exist.fr;
-            adcs[9] = (uint16_t)(val->current.len * 1000);
+            adcs[5] = (int16_t)(val->current.vel * 1000);
+            adcs[6] = (int16_t)(val->current.ang_vel * 1000);
+            adcs[7] = (int16_t)(val->current.rad * 1000);
+            adcs[8] = (int16_t)(val->current.acc * 1000);
+            adcs[9] = (int16_t)(val->current.len * 1000);
             err = esp_partition_write(partition, mem_offset, adcs, sizeof(adcs));
             if (err != ESP_OK)
             {
@@ -342,6 +343,7 @@ void Interrupt::reset_I_gain()
 
 void Interrupt::interrupt()
 { //  xtaskcreate
+    val->current.alpha = 0.6;
 
     while (1)
     {
