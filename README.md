@@ -25,6 +25,7 @@
 |   |   |       ├── search.hpp
 |   |   |       ├── test.hpp
 |   |   |       └── UI.hpp
+|   |   ├── files.hpp
 |   |   └── structs.hpp   
 |   ├── adachi.cpp
 |   ├── adc.cpp
@@ -32,6 +33,7 @@
 |   ├── buzzer.cpp
 │   ├── CMakeLists.txt
 |   ├── fast.cpp
+|   ├── files.cpp
 |   ├── interrupt.cpp
 |   ├── log.cpp
 |   ├── main.cpp
@@ -44,6 +46,9 @@
 |   ├── sensor.cpp
 |   ├── test.cpp
 │   └── UI.cpp
+├── partitions.csv
+├── sdkconfig
+├── sdkconfig.old
 └── README.md                  
 ```
 
