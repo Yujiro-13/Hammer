@@ -491,34 +491,24 @@ void Motion::adjust_pid(const char *gain, float *pid, float step, uint8_t mode_n
             return;
         }
 
-        if (val->current.vel > 0.02)
+        if (val->current.vel > 0.01)
         {
-            if (mode_num >= MODE_MAX)
-            {
-                mode_num = MODE_MIN;
-            }
-            else
-            {
-                *pid += step;
-            }
-            vTaskDelay(pdMS_TO_TICKS(100));
+
+            *pid += step;
+
+            vTaskDelay(pdMS_TO_TICKS(50));
         }
-        if (val->current.vel < -0.02)
+        if (val->current.vel < -0.01)
         {
-            if (mode_num <= MODE_MIN)
-            {
-                mode_num = MODE_MAX;
-            }
-            else
-            {
-                *pid -= step;
-            }
-            vTaskDelay(pdMS_TO_TICKS(100));
+
+            *pid -= step;
+
+            vTaskDelay(pdMS_TO_TICKS(50));
         }
 
         printf("%s : %f\n", gain, *pid);
 
-        vTaskDelay(100 / portTICK_PERIOD_MS);
+        vTaskDelay(50 / portTICK_PERIOD_MS);
     }
 }
 
@@ -539,12 +529,12 @@ void Motion::set_pid_gain()
     t_file_pid_gain pid_gain = read_file_pid();
 
     adjust_pid(speed_Kp, &pid_gain.speed_Kp, 0.1, mode);
-    adjust_pid(speed_Ki, &pid_gain.speed_Ki, 0.1, mode + 1);
+    adjust_pid(speed_Ki, &pid_gain.speed_Ki, 10, mode + 1);
     adjust_pid(speed_Kd, &pid_gain.speed_Kd, 0.1, mode + 2);
     adjust_pid(ang_vel_Kp, &pid_gain.ang_vel_Kp, 0.1, mode + 3);
-    adjust_pid(ang_vel_Ki, &pid_gain.ang_vel_Ki, 0.1, mode + 4);
+    adjust_pid(ang_vel_Ki, &pid_gain.ang_vel_Ki, 10, mode + 4);
     adjust_pid(ang_vel_Kd, &pid_gain.ang_vel_Kd, 0.1, mode + 5);
-    adjust_pid(wall_Kp, &pid_gain.wall_Kp, 0.1, mode + 6);
+    adjust_pid(wall_Kp, &pid_gain.wall_Kp, 0.001, mode + 6);
     adjust_pid(wall_Ki, &pid_gain.wall_Ki, 0.1, mode + 7);
     adjust_pid(wall_Kd, &pid_gain.wall_Kd, 0.1, mode + 8);
 
@@ -568,34 +558,24 @@ void Motion::adjust_wall_threshold(const char *threshold, uint16_t *th_value, ui
             return;
         }
 
-        if (val->current.vel > 0.02)
+        if (val->current.vel > 0.01)
         {
-            if (mode_num >= MODE_MAX)
-            {
-                mode_num = MODE_MIN;
-            }
-            else
-            {
-                *th_value += step;
-            }
-            vTaskDelay(pdMS_TO_TICKS(100));
+
+            *th_value += step;
+
+            vTaskDelay(pdMS_TO_TICKS(50));
         }
-        if (val->current.vel < -0.02)
+        if (val->current.vel < -0.01)
         {
-            if (mode_num <= MODE_MIN)
-            {
-                mode_num = MODE_MAX;
-            }
-            else
-            {
-                *th_value -= step;
-            }
-            vTaskDelay(pdMS_TO_TICKS(100));
+
+            *th_value -= step;
+
+            vTaskDelay(pdMS_TO_TICKS(50));
         }
 
         printf("%s : %d\n", threshold, *th_value);
 
-        vTaskDelay(100 / portTICK_PERIOD_MS);
+        vTaskDelay(50 / portTICK_PERIOD_MS);
     }
 }
 
@@ -620,8 +600,8 @@ void Motion::set_wall_threshold()
     adjust_wall_threshold(th_wall_fr, &th_value.th_wall_fr, 1, mode + 3);
     adjust_wall_threshold(th_control_l, &th_value.th_control_l, 1, mode + 4);
     adjust_wall_threshold(th_control_r, &th_value.th_control_r, 1, mode + 5);
-    adjust_wall_threshold(ref_l, &th_value.ref_l, 1, mode + 6);
-    adjust_wall_threshold(ref_r, &th_value.ref_r, 1, mode + 7);
+    adjust_wall_threshold(ref_l, &th_value.ref_l, 10, mode + 6);
+    adjust_wall_threshold(ref_r, &th_value.ref_r, 10, mode + 7);
 
     write_file_wall_th(&th_value);
 
