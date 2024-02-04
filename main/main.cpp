@@ -24,7 +24,7 @@
     8: テスト2 直進確認
     9: テスト3 旋回確認（左90）
     10: テスト4 旋回確認（右90）
-    11: テスト5 旋回確認（左180度）
+    11: テスト5 PIDゲイン・壁センサー閾値調整
     12: テスト6 直進停止確認
     13: テスト7 壁センサー確認
     14: ログ出力
@@ -32,7 +32,6 @@
     16: ログ出力「マップ」（未実装）
 */
 
-int target_param = 0;
 
 extern "C" void app_main(void)
 {
@@ -61,62 +60,9 @@ extern "C" void app_main(void)
            CONFIG_IDF_TARGET, chip_info.cores);
 
     // motor.sincurve();
+    //buzzer.play();
 
-    /*const char *TAG = "file_example";
-    const char *PARTITION_LABEL = "storage";
-    const std::string BASE_PATH = "/param";
-    const std::string FILE_PATH = BASE_PATH + "/pid.txt";
-    const esp_vfs_fat_mount_config_t MOUNT_CONFIG = {
-        .format_if_mount_failed = true,
-        .max_files = 4,
-        .allocation_unit_size = CONFIG_WL_SECTOR_SIZE,
-    };
-
-    wl_handle_t wl_handle = WL_INVALID_HANDLE;
-
-    esp_err_t err = esp_vfs_fat_spiflash_mount(
-        BASE_PATH.c_str(),
-        PARTITION_LABEL,
-        &MOUNT_CONFIG,
-        &wl_handle
-    );
-
-    if (err != ESP_OK)
-    {
-        ESP_LOGE(TAG, "Failed to mount FATFS (%s)", esp_err_to_name(err));
-        return;
-    }
-
-    ESP_LOGI(TAG, "Opening file");
-    std::ifstream ifile(FILE_PATH, std::ios::in | std::ios::binary);
-    if(ifile.fail())
-    {
-        ESP_LOGE(TAG, "Failed to open %s for reading", FILE_PATH.c_str());
-        //return;
-    }else{
-        std::string str;
-        getline(ifile, str);
-        //target_param = std::stoi(str);
-
-        ESP_LOGI(TAG, "target_param: %d", target_param);
-    }
-    ifile.close();
-
-    ESP_LOGI(TAG, "write file : %d", target_param);
-    std::ofstream ffile(FILE_PATH, std::ios::out | std::ios::binary);
-    if(ffile.fail())
-    {
-        ESP_LOGE(TAG, "Failed to open %s for writing", FILE_PATH.c_str());
-        //return;
-    }else{
-        ffile << target_param + 1 << std::endl;
-        ffile.close();
-        ESP_LOGI(TAG, "write file : %d", target_param + 1);
-    }
-
-    ESP_LOGI(TAG, "Umounting FATFS");
-    esp_vfs_fat_spiflash_unmount(BASE_PATH.c_str(), wl_handle);*/
-
+    /* ファイルシステムのマウント */
     init_files();
 
     while (1)
