@@ -328,17 +328,17 @@ void Adachi::search_adachi(int gx, int gy)
 	switch (get_nextdir(gx, gy, MASK_SEARCH, &glob_nextdir)) // 次に行く方向を戻り値とする関数を呼ぶ
 	{
 	case FRONT:
-		run();
+		run_half();
 		//printf("run_half\n");
 		break;
 
 	case RIGHT:
-		turn_right();
+		turn_right_2();
 		//printf("turn_right\n");
 		break;
 
 	case LEFT:
-		turn_left();
+		turn_left_2();
 		//printf("turn_left\n");
 		break;
 
@@ -385,14 +385,14 @@ void Adachi::search_adachi(int gx, int gy)
 
 		case RIGHT:
 			stop();
-			turn_right();
+			turn_right_2();
 			run_half();
 			//printf("turn_right\n");
 			break;
 
 		case LEFT:
 			stop();
-			turn_left();
+			turn_left_2();
 			run_half();
 			//printf("turn_left\n");
 			break;
