@@ -1,4 +1,4 @@
-#include "include/Driver/Buzzer.hpp"
+#include "include/Driver/buzzer.hpp"
 
 BUZZER::BUZZER(ledc_channel_t channel, ledc_timer_t timer, gpio_num_t pin){
     _channel = channel;
@@ -43,46 +43,47 @@ void BUZZER::stop(){
 }
 
 
-/*void BUZZER::music(enum melody m){
-    freq(m);
+void BUZZER::music(uint32_t f){
+    freq(f);
     vTaskDelay(100/portTICK_PERIOD_MS);
     stop();
     vTaskDelay(50/portTICK_PERIOD_MS);
 }
 
 void BUZZER::play(){
+    melody m;
     
     while(1){
         
         //birhday song
-        music(C);
-        music(C);
-        music(D);
-        music(C);
-        music(F);
-        music(E);
-        music(C);
-        music(C);
-        music(D);
-        music(C);
-        music(G);
-        music(F);
-        music(C);
-        music(C);
-        music(C);
-        music(A);
-        music(F);
-        music(E);
-        music(D);
-        music(B);
-        music(B);
-        music(A);
-        music(F);
-        music(G);
-        music(F);
+        music(m.C);
+        music(m.C);
+        music(m.D);
+        music(m.C);
+        music(m.F);
+        music(m.E);
+        music(m.C);
+        music(m.C);
+        music(m.D);
+        music(m.C);
+        music(m.G);
+        music(m.F);
+        music(m.C);
+        music(m.C);
+        music(m.C);
+        music(m.A);
+        music(m.F);
+        music(m.E);
+        music(m.D);
+        music(m.B);
+        music(m.B);
+        music(m.A);
+        music(m.F);
+        music(m.G);
+        music(m.F);
         stop();
         
         vTaskDelay(100/portTICK_PERIOD_MS);
         }
-    }*/
+    }
 
