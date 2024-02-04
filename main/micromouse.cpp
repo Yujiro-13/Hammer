@@ -96,11 +96,11 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
     val.tar.rad = M_PI/2.0;
 
     // 速度
-    val.tar.acc = 0.5;
+    //val.tar.acc = 0.5;
     val.max.acc = 0.5;
-    val.tar.vel = 0.3;
+    //val.tar.vel = 0.3;
     val.max.vel = 0.3;
-    val.min.vel = 0.1;
+    val.min.vel = 0.05;
     val.end.vel = 0.3;
 
     // 角速度
@@ -177,7 +177,7 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
             control.flag = FALSE;
         }
 
-        if (val.current.vel > 0.05)
+        if (val.current.vel > 0.04)
         {
             if (mode >= MODE_MAX)
             {
@@ -189,7 +189,7 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
             }
             vTaskDelay(pdMS_TO_TICKS(100));
         }
-        if (val.current.vel < -0.05)
+        if (val.current.vel < -0.04)
         {
             if (mode <= MODE_MIN)
             {
