@@ -25,8 +25,6 @@ constexpr gpio_num_t IMU_CLK = GPIO_NUM_2;
 constexpr gpio_num_t IMU_CS = GPIO_NUM_7;
 
 constexpr gpio_num_t BUZZER_PIN = GPIO_NUM_14;
-constexpr ledc_channel_t BUZZER_CH = LEDC_CHANNEL_0;
-constexpr ledc_timer_t BUZZER_TIMER = LEDC_TIMER_0;
 
 constexpr gpio_num_t ENC_MISO = GPIO_NUM_35;
 constexpr gpio_num_t ENC_MOSI = GPIO_NUM_36;

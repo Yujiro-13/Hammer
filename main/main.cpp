@@ -45,7 +45,7 @@ extern "C" void app_main(void)
 
     Motor motor(BDC_R_MCPWM_GPIO_PH, BDC_R_MCPWM_GPIO_EN, BDC_L_MCPWM_GPIO_PH, BDC_L_MCPWM_GPIO_EN, FAN_PIN);
     PCA9632 led(I2C_NUM_0, LED_ADRS);
-    BUZZER buzzer(BUZZER_CH, BUZZER_TIMER, BUZZER_PIN);
+    BUZZER buzzer(BUZZER_PIN);
     AS5047P enc_R(SPI3_HOST, ENC_CS_R, false);
     AS5047P enc_L(SPI3_HOST, ENC_CS_L, true);
     MPU6500 imu(SPI2_HOST, IMU_CS);
@@ -61,6 +61,7 @@ extern "C" void app_main(void)
 
     // motor.sincurve();
     //buzzer.play();
+    buzzer.play(2000,500);
 
     /* ファイルシステムのマウント */
     init_files();
