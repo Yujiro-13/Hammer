@@ -1,4 +1,4 @@
-#include "include/Driver/buzzer.hpp"
+#include "include/Driver/Buzzer.hpp"
 
 BUZZER::BUZZER(ledc_channel_t channel, ledc_timer_t timer, gpio_num_t pin){
     _channel = channel;

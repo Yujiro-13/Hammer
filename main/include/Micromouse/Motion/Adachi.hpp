@@ -1,7 +1,7 @@
 #ifndef ADACHI_HPP
 #define ADACHI_HPP
 
-#include "motion.hpp"
+#include "Motion.hpp"
 
 class Adachi : public Motion
 {

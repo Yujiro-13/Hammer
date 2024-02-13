@@ -1,10 +1,10 @@
-#include "include/Micromouse/interrupt.hpp"
+#include "include/Micromouse/Interrupt.hpp"
 #include "include/Micromouse/UI/fast.hpp"
 #include "include/Micromouse/UI/log.hpp"
 #include "include/Micromouse/UI/search.hpp"
 #include "include/Micromouse/UI/test.hpp"
-#include "include/Micromouse/Motion/adachi.hpp"
-#include "include/MIcromouse/Base_task.hpp"
+#include "include/Micromouse/Motion/Adachi.hpp"
+#include "include/Micromouse/Base_task.hpp"
 #include <functional>
 
 std::vector<std::shared_ptr<UI>> ui;

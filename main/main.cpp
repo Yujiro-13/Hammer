@@ -8,8 +8,8 @@
 #include "esp_vfs.h"
 #include "esp_vfs_fat.h"
 #include "esp_system.h"
-#include "MIcromouse/Base_task.hpp"
-#include "include/MIcromouse/interrupt.hpp"
+#include "Micromouse/Base_task.hpp"
+#include "include/Micromouse/Interrupt.hpp"
 #include "include/files.hpp"
 
 /*

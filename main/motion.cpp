@@ -1,4 +1,4 @@
-#include "include/Micromouse/Motion/motion.hpp"
+#include "./include/Micromouse/Motion/Motion.hpp"
 
 #define MODE_MAX 15
 #define MODE_MIN 0

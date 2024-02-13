@@ -1,4 +1,4 @@
-#include "include/Micromouse/interrupt.hpp"
+#include "include/Micromouse/Interrupt.hpp"
 
 #define TIRE_DIAMETER 0.01368
 #define MMPP TIRE_DIAMETER*M_PI / ENC_MAX

@@ -1,4 +1,4 @@
-#include "include/Micromouse/Motion/adachi.hpp"
+#include "include/Micromouse/Motion/Adachi.hpp"
 
 
 #define MAZESIZE_X 32 // 迷路の大きさ(x方向)
