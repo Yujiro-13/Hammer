@@ -46,6 +46,7 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
     t_map map;
     t_file_pid_gain pid_gain;
     t_file_wall_th walll_threshold;
+    t_file_center_sens_value center_sens_val;
 
     printf("finish struct\n");
 
@@ -87,6 +88,7 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
     /* パラメータの設定 */
     pid_gain = read_file_pid();
     walll_threshold = read_file_wall_th();
+    center_sens_val = read_file_center_sens_val();
 
     // 距離
     val.tar.len = 0.09;
@@ -97,7 +99,7 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
 
     // 速度
     //val.tar.acc = 0.5;
-    val.max.acc = 0.5;
+    val.max.acc = 1.0;
     //val.tar.vel = 0.3;
     val.max.vel = 0.3;
     val.min.vel = 0.05;
@@ -108,7 +110,7 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
     val.max.ang_acc = M_PI*5.0;
     val.tar.ang_vel = 0.0;
     val.max.ang_vel = M_PI;
-    val.min.ang_vel = M_PI/10.0;
+    val.min.ang_vel = M_PI/5.0;
     val.end.ang_vel = 0.0;
 
     // 速度制御

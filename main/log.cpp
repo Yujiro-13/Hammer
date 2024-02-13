@@ -1,5 +1,8 @@
 #include "include/Micromouse/UI/log.hpp"
 
+#define MAZESIZE_X 32
+#define MAZESIZE_Y 32
+
 void Log::ptr_by_sensor(t_sens_data *_sens) { sens = _sens; }
 
 void Log::ptr_by_motion(t_mouse_motion_val *_val) { val = _val; }
@@ -23,7 +26,6 @@ void Log::log_print()
 
     uint32_t mem_offset = 0;
     int16_t data[10];
-    
 
     while (1)
     {
@@ -40,7 +42,8 @@ void Log::log_print()
             break;
         }
     }
-    // std::cout << "Log" << std::endl;
+    // printf("\n");
+    //  std::cout << "Log" << std::endl;
 }
 
 void Log::main_task()
@@ -91,8 +94,117 @@ void Log1::log_print()
     std::cout << "Log" << std::endl;
 }
 
+void Log1::map_print()
+{
+    *map = map_read();
+    signed char i, j;
+
+    printf("\x1b[0;0H");
+    printf("\n\r+");
+
+    for (i = 0; i < MAZESIZE_X; i++)
+    {
+        switch (map->wall[i][MAZESIZE_X - 1].north)
+        {
+        case NOWALL:
+            printf("\x1b[37m  +");
+            break;
+
+        case WALL:
+            printf("\x1b[37m--+");
+            break;
+
+        case UNKNOWN:
+            printf("\x1b[31m--+");
+            break;
+        default:
+            printf("\x1b[33m--+");
+            break;
+        }
+    }
+
+    printf("\n\r");
+    for (j = MAZESIZE_Y - 1; j > -1; j--)
+    {
+        switch (map->wall[0][j].west)
+        {
+        case NOWALL:
+            printf("\x1b[37m ");
+            break;
+
+        case WALL:
+            printf("\x1b[37m|");
+            break;
+
+        case UNKNOWN:
+            printf("\x1b[31m|");
+            break;
+        default:
+            printf("\x1b[33m|");
+            break;
+        }
+
+        /*if (map->pos.x == j && map->pos.y == i)
+        {
+            printf("\x1b[32m*\x1b[37m");
+        }
+        else if (map->GOAL_X == j && map->GOAL_Y == i)
+        {
+            printf("\x1b[32mG\x1b[37m");
+        }
+        else
+        {
+            printf(" ");
+        }*/
+        for (i = 0; i < MAZESIZE_X; i++)
+        {
+            switch (map->wall[i][j].east)
+            {
+            case NOWALL:
+                printf("\x1b[37m  ");
+                break;
+
+            case WALL:
+                printf("\x1b[37m  |");
+                break;
+
+            case UNKNOWN:
+                printf("\x1b[31m  |");
+                break;
+
+            default:
+                printf("\x1b[33m  |");
+                break;
+            }
+        }
+
+        for (i = 0; i < MAZESIZE_X; i++)
+        {
+            switch (map->wall[i][j].south)
+            {
+            case NOWALL:
+                printf("\x1b[37m  +");
+                break;
+
+            case WALL:
+                printf("\x1b[37m--+");
+                break;
+
+            case UNKNOWN:
+                printf("\x1b[31m--+");
+                break;
+            default:
+                printf("\x1b[33m--+");
+                break;
+            }
+        }
+        printf("\n\r");
+    }
+}
+
 void Log1::main_task()
 {
-    log_print();
+    // log_print();
+    map_print();
     std::cout << "Log1" << std::endl;
 }

@@ -21,6 +21,8 @@ void Search::main_task()
     control->log_flag = TRUE;
     motion.InitMaze();
     motion.search_adachi(map->GOAL_X,map->GOAL_Y);
+    map_write(map);
+    control->log_flag = FALSE;
     std::cout << "Search" << std::endl;
 }
 
@@ -38,7 +40,14 @@ void All_Search::ref_by_motion(Adachi &_adachi) { motion = _adachi;}
 
 void All_Search::main_task()
 {
+    val->current.rad = 0.0;
+    map->pos.x = 0;
+    map->pos.y = 0;
+    map->pos.dir = NORTH;
     control->log_flag = TRUE;
-    motion.search_adachi(5,5);
+    motion.InitMaze();
+    motion.search_adachi(map->GOAL_X,map->GOAL_Y);
+    map_write(map);
+    control->log_flag = FALSE;
     std::cout << "All_Search" << std::endl;
 }

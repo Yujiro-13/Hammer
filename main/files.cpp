@@ -6,12 +6,17 @@
 const char *PID_FILE_TAG = "file_pid";
 const char *WALL_TH_FILE_TAG = "file_wall_th";
 const char *MAP_FILE_TAG = "file_map";
+const char *CENTER_VALUE_TAG = "center";
 const char *PARTITION_LABEL = "storage";
 const std::string BASE_PATH = "/param";
+
+/* ＊注意!! ファイル名が8文字を超えるものは、エラーで生成されない（設定で変更可） */
 const std::string PID_FILE_PATH = BASE_PATH + "/pid.txt";
 const std::string WALL_TH_FILE_PATH = BASE_PATH + "/wall_th.txt";
 const std::string MAP_FILE_PATH = BASE_PATH + "/map.txt";
+const std::string CENTER_VALUE_PATH = BASE_PATH + "/center.txt";
 const esp_vfs_fat_mount_config_t MOUNT_CONFIG = {
+
     .format_if_mount_failed = true,
     .max_files = 4,
     .allocation_unit_size = CONFIG_WL_SECTOR_SIZE,
@@ -321,11 +326,7 @@ t_file_wall_th read_file_wall_th()
     return th_value;
 }
 
-void unmount_fat()
-{
-    ESP_LOGI(BASE_PATH.c_str(), "Umounting FATFS");
-    esp_vfs_fat_spiflash_unmount(BASE_PATH.c_str(), wl_handle);
-}
+
 
 void map_write(t_map *map)
 {
@@ -337,7 +338,7 @@ void map_write(t_map *map)
     }
     else
     {
-        ffile.write(reinterpret_cast<const char*>(map), sizeof(t_map));
+        ffile.write(reinterpret_cast<const char *>(map), sizeof(t_map));
 
         ffile.close();
     }
@@ -355,7 +356,8 @@ t_map map_read()
     }
     else
     {
-        ifile.read(reinterpret_cast<char*>(&map), sizeof(t_map));
+        ESP_LOGI(MAP_FILE_TAG, "read file");
+        ifile.read(reinterpret_cast<char *>(&map), sizeof(t_map));  // ここでスタックオーバーフロー
 
         ifile.close();
 
@@ -366,4 +368,148 @@ t_map map_read()
     }
 
     return map;
+}
+
+void write_file_center_sens_val(t_file_center_sens_value *center_value)
+{
+    ESP_LOGI(CENTER_VALUE_TAG, "write file : %d", center_value->front_l);
+    ESP_LOGI(CENTER_VALUE_TAG, "write file : %d", center_value->front_r);
+    ESP_LOGI(CENTER_VALUE_TAG, "write file : %d", center_value->left_fl);
+    ESP_LOGI(CENTER_VALUE_TAG, "write file : %d", center_value->left_fr);
+    ESP_LOGI(CENTER_VALUE_TAG, "write file : %d", center_value->right_fl);
+    ESP_LOGI(CENTER_VALUE_TAG, "write file : %d", center_value->right_fr);
+    ESP_LOGI(CENTER_VALUE_TAG, "write file : %d", center_value->rear_fl);
+    ESP_LOGI(CENTER_VALUE_TAG, "write file : %d", center_value->rear_fr);
+
+    std::ofstream ffile(CENTER_VALUE_PATH, std::ios::out);
+    if (ffile.fail())
+    {
+        ESP_LOGE(CENTER_VALUE_TAG, "Failed to open %s for writing. Error: %s", CENTER_VALUE_PATH.c_str(), strerror(errno));
+        // return;
+    }
+    else
+    {
+        ffile << center_value->front_l << std::endl;
+        ffile << center_value->front_r << std::endl;
+        ffile << center_value->left_fl << std::endl;
+        ffile << center_value->left_fr << std::endl;
+        ffile << center_value->right_fl << std::endl;
+        ffile << center_value->right_fr << std::endl;
+        ffile << center_value->rear_fl << std::endl;
+        ffile << center_value->rear_fr << std::endl;
+
+        ffile.close();
+    }
+}
+
+t_file_center_sens_value read_file_center_sens_val()
+{
+    t_file_center_sens_value ce_value;
+
+    ESP_LOGI(CENTER_VALUE_TAG, "Opening file");
+    std::ifstream ifile(CENTER_VALUE_PATH, std::ios::in);
+    if (ifile.fail())
+    {
+        ESP_LOGE(CENTER_VALUE_TAG, "Failed to open %s for reading. Error: %s", CENTER_VALUE_PATH.c_str(), strerror(errno));
+    }
+    else
+    {
+        std::string line;
+        int line_number = 0; // 行数をカウントする変数
+
+        while (getline(ifile, line))
+        {
+            // 行ごとに処理
+
+            // ラインから値を抽出
+            std::istringstream iss(line);
+
+            // 例：speed_Kpを抽出
+            if (line_number == 0)
+            {
+                if (!(iss >> ce_value.front_l))
+                {
+                    std::cerr << "Error parsing front_l from line " << line_number + 1 << std::endl;
+                }
+            }
+
+            // 他のメンバーを抽出
+            if (line_number == 1)
+            {
+                if (!(iss >> ce_value.front_r))
+                {
+                    std::cerr << "Error parsing front_r from line " << line_number + 1 << std::endl;
+                }
+            }
+
+            if (line_number == 2)
+            {
+                if (!(iss >> ce_value.left_fl))
+                {
+                    std::cerr << "Error parsing left_fl from line " << line_number + 1 << std::endl;
+                }
+            }
+
+            if (line_number == 3)
+            {
+                if (!(iss >> ce_value.left_fr))
+                {
+                    std::cerr << "Error parsing left_fr from line " << line_number + 1 << std::endl;
+                }
+            }
+
+            if (line_number == 4)
+            {
+                if (!(iss >> ce_value.right_fl))
+                {
+                    std::cerr << "Error parsing right_fl from line " << line_number + 1 << std::endl;
+                }
+            }
+
+            if (line_number == 5)
+            {
+                if (!(iss >> ce_value.right_fr))
+                {
+                    std::cerr << "Error parsing right_fr from line " << line_number + 1 << std::endl;
+                }
+            }
+
+            if (line_number == 6)
+            {
+                if (!(iss >> ce_value.rear_fl))
+                {
+                    std::cerr << "Error parsing rear_fl from line " << line_number + 1 << std::endl;
+                }
+            }
+
+            if (line_number == 7)
+            {
+                if (!(iss >> ce_value.rear_fr))
+                {
+                    std::cerr << "Error parsing rear_fr from line " << line_number + 1 << std::endl;
+                }
+            }
+
+            line_number++;
+        }
+
+        ESP_LOGI(CENTER_VALUE_TAG, "read file front_l : %d", ce_value.front_l);
+        ESP_LOGI(CENTER_VALUE_TAG, "read file front_r : %d", ce_value.front_r);
+        ESP_LOGI(CENTER_VALUE_TAG, "read file left_fl : %d", ce_value.left_fl);
+        ESP_LOGI(CENTER_VALUE_TAG, "read file left_fr : %d", ce_value.left_fr);
+        ESP_LOGI(CENTER_VALUE_TAG, "read file right_fl: %d", ce_value.right_fl);
+        ESP_LOGI(CENTER_VALUE_TAG, "read file right_fr: %d", ce_value.right_fr);
+        ESP_LOGI(CENTER_VALUE_TAG, "read file rear_fl: %d", ce_value.rear_fl);
+        ESP_LOGI(CENTER_VALUE_TAG, "read file rear_fr: %d", ce_value.rear_fr);
+    }
+
+    ifile.close();
+
+    return ce_value;
+}
+
+void unmount_fat()
+{
+    ESP_LOGI(BASE_PATH.c_str(), "Umounting FATFS");
+    esp_vfs_fat_spiflash_unmount(BASE_PATH.c_str(), wl_handle);
 }

@@ -70,6 +70,10 @@ typedef struct
     t_wall_exist exist; //wall true or false
     t_wall_exist control_enable;  //control true or false
     t_bool control;  //enable or disable
+    t_sens_dir centor_front;  //center value
+    t_sens_dir center_right;
+    t_sens_dir center_left;
+    t_sens_dir center_rear;
 }t_wall_sens;  //wall sensor data
 
 typedef struct 
@@ -245,6 +249,17 @@ typedef struct
     uint16_t ref_r = 0;
 }t_file_wall_th;   //wall threshold file
 
+typedef struct
+{
+    uint16_t front_l = 0;
+    uint16_t front_r = 0;
+    uint16_t left_fl = 0;
+    uint16_t left_fr = 0;
+    uint16_t right_fl = 0;
+    uint16_t right_fr = 0;
+    uint16_t rear_fl = 0;
+    uint16_t rear_fr = 0;
+}t_file_center_sens_value;
 
 
 #endif // STRUCTS_HPP
