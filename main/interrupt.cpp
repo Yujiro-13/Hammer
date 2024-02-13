@@ -308,10 +308,10 @@ void Interrupt::logging()
             adcs[3] = sens->wall.val.fr;
             adcs[4] = (uint16_t)(sens->BatteryVoltage * 1000);
             adcs[5] = (int16_t)(val->current.vel * 1000);
-            adcs[6] = (int16_t)(val->current.ang_vel * 1000);
+            adcs[6] = (int16_t)(val->tar.vel * 1000);
             adcs[7] = (int16_t)(val->current.rad * 1000);
-            adcs[8] = (int16_t)(val->current.acc * 1000);
-            adcs[9] = (int16_t)(val->current.len * 1000);
+            adcs[8] = (int16_t)(val->current.ang_vel * 1000);
+            adcs[9] = (int16_t)(val->tar.ang_vel* 1000);
             err = esp_partition_write(partition, mem_offset, adcs, sizeof(adcs));
             if (err != ESP_OK)
             {
