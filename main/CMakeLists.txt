@@ -20,5 +20,6 @@ set(COMPONENT_SRCS
     "search.cpp"
     "test.cpp"
     "files.cpp"
+    "NeoPixel.cpp"
    )
 register_component()

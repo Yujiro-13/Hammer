@@ -11,21 +11,24 @@ BUZZER::BUZZER(gpio_num_t pin){
     _tx_config.trans_queue_depth = 10;
 
     ESP_ERROR_CHECK(rmt_new_tx_channel(&_tx_config, &buzzer_ch));
-    ESP_ERROR_CHECK(rmt_encoder_create());
+    ESP_ERROR_CHECK(encoder_rmt_create());
     ESP_ERROR_CHECK(rmt_enable(buzzer_ch));
 }
 
-BUZZER::~BUZZER(){}
+BUZZER::~BUZZER(){
+    encoder_delete(buzzer_enc);
+    rmt_del_channel(buzzer_ch);
+}
 
-esp_err_t BUZZER::rmt_encoder_create(){
+esp_err_t BUZZER::encoder_rmt_create(){
     esp_err_t ret = ESP_OK;
 
     buzzer_score_encoder_t *score = NULL;
     score = (buzzer_score_encoder_t*)calloc(1, sizeof(buzzer_score_encoder_t));
     ESP_GOTO_ON_FALSE(score, ESP_ERR_NO_MEM, err, this->TAG, "calloc failed");
-    score->base.encode = this->rmt_encoder;
-    score->base.del = this->rmt_encoder_delete;
-    score->base.reset = this->rmt_encoder_reset;
+    score->base.encode = this->encoder_rmt;
+    score->base.del = this->encoder_delete;
+    score->base.reset = this->encoder_reset;
     score->resolution = RMT_RESOLUTION;
     ESP_GOTO_ON_ERROR(rmt_new_copy_encoder(&this->copy_enc,&score->copy_encoder), err, TAG, "rmt_new_copy_encoder failed");
     buzzer_enc = &score->base;
@@ -41,7 +44,7 @@ err:
     return ret;
 }
 
-size_t BUZZER::rmt_encoder(rmt_encoder_t *encoder, rmt_channel_handle_t channel, const void *primary_data, size_t data_size, rmt_encode_state_t *ret_state){
+size_t BUZZER::encoder_rmt(rmt_encoder_t *encoder, rmt_channel_handle_t channel, const void *primary_data, size_t data_size, rmt_encode_state_t *ret_state){
     buzzer_score_encoder_t *score_enc = __containerof(encoder, buzzer_score_encoder_t, base);
     rmt_encoder_handle_t copy_encoder = score_enc->copy_encoder;
     rmt_encode_state_t session_state = RMT_ENCODING_RESET;
@@ -58,7 +61,7 @@ size_t BUZZER::rmt_encoder(rmt_encoder_t *encoder, rmt_channel_handle_t channel,
     return encoded_symbols;
 }
 
-esp_err_t BUZZER::rmt_encoder_delete(rmt_encoder_t *encoder){
+esp_err_t BUZZER::encoder_delete(rmt_encoder_t *encoder){
     buzzer_score_encoder_t *score_enc = __containerof(encoder, buzzer_score_encoder_t, base);
     if(score_enc->copy_encoder){
         rmt_del_encoder(score_enc->copy_encoder);
@@ -67,7 +70,7 @@ esp_err_t BUZZER::rmt_encoder_delete(rmt_encoder_t *encoder){
     return ESP_OK;
 }
 
-esp_err_t BUZZER::rmt_encoder_reset(rmt_encoder_t *encoder){
+esp_err_t BUZZER::encoder_reset(rmt_encoder_t *encoder){
     buzzer_score_encoder_t *score_enc = __containerof(encoder, buzzer_score_encoder_t, base);
     if(score_enc->copy_encoder){
         rmt_encoder_reset(score_enc->copy_encoder);
