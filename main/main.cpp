@@ -61,7 +61,11 @@ extern "C" void app_main(void)
 
     // motor.sincurve();
     //buzzer.play();
-    buzzer.play(2000,500);
+    static BUZZER::buzzer_score_t pc98[] = {
+        {2000,100},{1000,100}
+    };
+
+    buzzer.play_melody(pc98, 2);
 
     /* ファイルシステムのマウント */
     init_files();

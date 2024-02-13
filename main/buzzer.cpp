@@ -80,7 +80,14 @@ void BUZZER::play(uint32_t freq_hz, uint32_t duration){
         .freq_hz = freq_hz,
         .duration_ms = duration
     };
-    rmt_transmit_config_t _tx_config;
-    _tx_config.loop_count = duration * freq_hz / 1000;
-    ESP_ERROR_CHECK(rmt_transmit(this->buzzer_ch, this->buzzer_enc,&score, sizeof(score),&_tx_config));
+    this->play_melody(&score,1);
+}
+
+void BUZZER::play_melody(buzzer_score_t* score,int len){
+    rmt_tx_wait_all_done(this->buzzer_ch, portMAX_DELAY);
+    for(int i=0;i<len;i++){
+        rmt_transmit_config_t _tx_config;
+        _tx_config.loop_count = score[i].duration_ms * score[i].freq_hz / 1000;
+        ESP_ERROR_CHECK(rmt_transmit(this->buzzer_ch, this->buzzer_enc,&score[i], sizeof(buzzer_score_t),&_tx_config));
+    }
 }
