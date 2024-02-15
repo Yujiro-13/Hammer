@@ -21,9 +21,10 @@ void Search::main_task()
     control->log_flag = TRUE;
     motion.InitMaze();
     motion.search_adachi(map->GOAL_X,map->GOAL_Y);
-    map_write(map);
     control->log_flag = FALSE;
-    std::cout << "Search" << std::endl;
+    map_write(map);
+    
+    //std::cout << "Search" << std::endl;
 }
 
 void All_Search::ptr_by_sensor(t_sens_data *_sens) { sens = _sens; }
@@ -47,7 +48,8 @@ void All_Search::main_task()
     control->log_flag = TRUE;
     motion.InitMaze();
     motion.search_adachi(map->GOAL_X,map->GOAL_Y);
-    map_write(map);
     control->log_flag = FALSE;
-    std::cout << "All_Search" << std::endl;
+    map_write(map);
+    
+    //std::cout << "All_Search" << std::endl;
 }
