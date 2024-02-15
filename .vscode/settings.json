@@ -8,5 +8,6 @@
     "files.associations": {
         "*.h": "c",
         "regex": "cpp"
-    }
+    },
+    "idf.portWin": "COM4"
 }
