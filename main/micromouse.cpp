@@ -139,11 +139,10 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
     sens.wall.ref.r = walll_threshold.ref_r;
 
     // ゴール座標
-    map.GOAL_X = 3;
-    map.GOAL_Y = 3;
+    map.GOAL_X = 8;
+    map.GOAL_Y = 8;
 
     printf("finish parameter\n");
-
     // タスク優先順位 1 ~ 25    25が最高優先度
     xTaskCreatePinnedToCore(myTaskInterrupt,
                             "interrupt", 8192, &interrupt, configMAX_PRIORITIES, NULL, PRO_CPU_NUM);
@@ -189,7 +188,7 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
             {
                 mode++;
             }
-            vTaskDelay(pdMS_TO_TICKS(100));
+            vTaskDelay(pdMS_TO_TICKS(500));
         }
         if (val.current.vel < -0.04)
         {
@@ -201,14 +200,14 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
             {
                 mode--;
             }
-            vTaskDelay(pdMS_TO_TICKS(100));
+            vTaskDelay(pdMS_TO_TICKS(500));
         }
         //printf("time:%d\n", control.time_count);
         //printf("vel:%f\n", val.current.vel);
         //printf("rad:%f\n", val.current.rad);
         //printf("BatteryVoltage:%f\n", sens.BatteryVoltage);
         //printf("sens.wall.val.fl:%d sens.wall.val.l:%d sens.wall.val.r:%d sens.wall.val.fr:%d\n", sens.wall.val.fl, sens.wall.val.l, sens.wall.val.r, sens.wall.val.fr);
-        vTaskDelay(100/portTICK_PERIOD_MS);
+        vTaskDelay(10/portTICK_PERIOD_MS);
     }
     //vTaskDelay(pdMS_TO_TICKS(10));
 }
