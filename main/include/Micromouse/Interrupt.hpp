@@ -33,6 +33,7 @@ class Interrupt : public Micromouse{
         void feedback_control();
         void calc_distance();
         void calc_angle();
+        float calc_target_accel();
         t_sens_data *sens;
         t_mouse_motion_val *val;
         t_control *control;
@@ -41,6 +42,8 @@ class Interrupt : public Micromouse{
         float _vel = 0.0;
         float max_vel = 0.0;
         float max_ang_vel = 0.0;
+        float target_acc = 0.0;
+        float sum_len = 0.0;
 
         ADC *adc;
         AS5047P *encR;

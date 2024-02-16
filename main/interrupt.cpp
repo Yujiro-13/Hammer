@@ -247,6 +247,7 @@ void Interrupt::calc_distance()
     val->current.vel = val->current.alpha * (val->current.vel + val->current.acc) + (1.0 - val->current.alpha) * _vel;
     val->current.len += val->current.vel * 0.001;
     // std::cout << "val->current.vel : " << val->current.vel << std::endl;
+    val->sum.len += val->current.vel * 0.001;
 
     val->I.vel += val->current.vel; // 積分値更新
 
@@ -309,7 +310,7 @@ void Interrupt::logging()
             adcs[4] = (uint16_t)(sens->BatteryVoltage * 1000);
             adcs[5] = (int16_t)(val->current.vel * 1000);
             adcs[6] = (int16_t)(val->tar.vel * 1000);
-            adcs[7] = (int16_t)(val->current.rad * 1000);
+            adcs[7] = (int16_t)(val->sum.len * 1000);
             adcs[8] = (int16_t)(val->current.ang_vel * 1000);
             adcs[9] = (int16_t)(val->tar.ang_vel* 1000);
             err = esp_partition_write(partition, mem_offset, adcs, sizeof(adcs));
@@ -339,6 +340,11 @@ void Interrupt::reset_I_gain()
     val->I.ang_vel = 0.0;
     val->I.wall_error = 0.0;
     return;
+}
+
+float Interrupt::calc_target_accel()
+{
+    return ((val->end.vel)* (val->end.vel) - (val->current.vel) * (val->current.vel)) / (2.0 * val->tar.len);
 }
 
 void Interrupt::interrupt()

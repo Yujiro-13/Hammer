@@ -35,6 +35,7 @@ class Motion : public Micromouse
         void adjust_wall_threshold(const char* threshold, uint16_t *th_value, uint8_t step, uint8_t mode_num);
         void set_wall_threshold();
         void offset();
+        void offset2();
         void calibrate_wall_th();
         
         
