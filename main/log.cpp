@@ -124,7 +124,7 @@ void Log1::map_print()
     }
 
     printf("\n\r");
-    for (j = MAZESIZE_Y - 1; j > -1; j--)
+    for (j = (MAZESIZE_Y - 1); j > -1; j--)
     {
         switch (map->wall[0][j].west)
         {
@@ -161,7 +161,7 @@ void Log1::map_print()
             switch (map->wall[i][j].east)
             {
             case NOWALL:
-                printf("\x1b[37m  ");
+                printf("\x1b[37m   ");
                 break;
 
             case WALL:
@@ -178,6 +178,7 @@ void Log1::map_print()
             }
         }
 
+    printf("\n\r+");
         for (i = 0; i < MAZESIZE_X; i++)
         {
             switch (map->wall[i][j].south)
