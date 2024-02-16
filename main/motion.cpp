@@ -71,7 +71,7 @@ void Motion::run()
     // std::cout << "##### deceleration #####" << std::endl;
     // val->tar.acc = -(val->max.acc);
 
-    while ((val->tar.len) > val->current.len)
+    while ((val->tar.len - 0.001) > val->current.len)
     {
         if (val->tar.vel >= val->max.vel)
         {
@@ -127,7 +127,7 @@ void Motion::run_half()
     // std::cout << "##### deceleration #####" << std::endl;
     // val->tar.acc = -(val->tar.acc);
 
-    while ((val->tar.len) > val->current.len)
+    while ((val->tar.len - 0.001) > val->current.len)
     {
         if (val->tar.vel >= val->max.vel)
         {
@@ -300,7 +300,7 @@ void Motion::stop()
     // std::cout << "##### deceleration #####" << std::endl;
     val->tar.acc = -(val->max.acc);
 
-    while ((val->tar.len) > val->current.len - 0.001)
+    while ((val->tar.len - 0.001) > val->current.len)
     {
         if (val->tar.vel <= val->min.vel)
         {
@@ -597,8 +597,8 @@ void Motion::set_pid_gain()
     adjust_pid(ang_vel_Ki, &pid_gain.ang_vel_Ki, 1, mode + 4);
     adjust_pid(ang_vel_Kd, &pid_gain.ang_vel_Kd, 0.1, mode + 5);
     adjust_pid(wall_Kp, &pid_gain.wall_Kp, 0.001, mode + 6);
-    adjust_pid(wall_Ki, &pid_gain.wall_Ki, 0.1, mode + 7);
-    adjust_pid(wall_Kd, &pid_gain.wall_Kd, 0.1, mode + 8);
+    adjust_pid(wall_Ki, &pid_gain.wall_Ki, 0.01, mode + 7);
+    adjust_pid(wall_Kd, &pid_gain.wall_Kd, 0.01, mode + 8);
 
     write_file_pid(&pid_gain);
 
@@ -756,3 +756,48 @@ void Motion::calibrate_wall_th()
     write_file_center_sens_val(&center_val);
 }
 
+void Motion::offset2()
+{
+    control->flag = TRUE;       // 制御ON
+    sens->wall.control = FALSE; // 壁制御OFF
+
+    val->I.vel_error = 0.0;
+    val->I.ang_error = 0.0;
+    val->I.wall_error = 0.0;
+
+    val->tar.vel = 0.0;
+    val->tar.acc = 0.0;
+    val->tar.ang_vel = 0.0;
+    val->tar.ang_acc = 0.0;
+
+    val->tar.len = OFFSET_DISTANCE;
+    val->current.len = 0.0;
+    val->tar.acc = val->max.acc;
+    // val->tar.vel = 0.0;
+
+    while (((val->tar.len - 0.01) - val->current.len) > (((val->tar.vel) * (val->tar.vel)) / (2.0 *
+                                                                                              val->tar.acc)))
+    {
+        vTaskDelay(1 / portTICK_PERIOD_MS);
+    }
+
+    // std::cout << "##### deceleration #####" << std::endl;
+    //val->tar.acc = -(val->max.acc);
+
+    while ((val->tar.len - 0.001) > val->current.len)
+    {
+        if (val->tar.vel <= val->min.vel)
+        {
+            val->tar.acc = 0;
+            val->tar.vel = val->min.vel;
+        }
+        vTaskDelay(1 / portTICK_PERIOD_MS);
+    }
+
+    //val->tar.acc = 0.0;
+    //val->tar.vel = 0.0;
+
+    
+
+    std::cout << "offset" << std::endl;
+}
