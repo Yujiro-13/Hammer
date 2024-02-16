@@ -325,6 +325,8 @@ void Adachi::search_adachi(int gx, int gy)
 	// 引数gx,gyに向かって足立法で迷路を探索する
 	t_direction glob_nextdir; // 次に向かう方向を記録する変数
 
+	offset2(); // オフセット距離を走行
+
 	switch (get_nextdir(gx, gy, MASK_SEARCH, &glob_nextdir)) // 次に行く方向を戻り値とする関数を呼ぶ
 	{
 	case FRONT:
@@ -426,7 +428,7 @@ void Adachi::search_adachi(int gx, int gy)
 			map->pos.x--; // 西を向いたときはX座標を減らす
 			break;
 		}
-		printf("map->pos.x = %d, map->pos.y = %d\n", map->pos.x, map->pos.y);
+		//printf("map->pos.x = %d, map->pos.y = %d\n", map->pos.x, map->pos.y);
 	}
 	set_wall(map->pos.x, map->pos.y); // 壁をセット
 
