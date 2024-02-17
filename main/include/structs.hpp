@@ -18,6 +18,12 @@ typedef enum
 
 typedef enum
 {
+    SEARCH = 0,
+    ALL_SEARCH = 1,
+}t_search_mode;
+
+typedef enum
+{
     FRONT = 0,
     RIGHT = 1,
     REAR = 2,
@@ -222,6 +228,9 @@ typedef struct
     unsigned char size[32][32] = {0};
     uint8_t GOAL_X = 0;
     uint8_t GOAL_Y = 0;
+    t_search_mode flag;
+    t_bool search_count_flag = FALSE;
+    uint64_t search_time = 0;
 }t_map;     //map data
 
 typedef struct

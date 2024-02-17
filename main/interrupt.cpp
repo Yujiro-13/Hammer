@@ -363,6 +363,12 @@ void Interrupt::interrupt()
         {
             xSemaphoreGive(*on_logging);
         }
+
+        if (map->search_count_flag == TRUE)
+        {
+            map->search_time++;
+        }
+        
         
         control->time_count++;
 
