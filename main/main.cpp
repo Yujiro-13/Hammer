@@ -45,11 +45,12 @@ extern "C" void app_main(void)
 
     Motor motor(BDC_R_MCPWM_GPIO_PH, BDC_R_MCPWM_GPIO_EN, BDC_L_MCPWM_GPIO_PH, BDC_L_MCPWM_GPIO_EN, FAN_PIN);
     PCA9632 led(I2C_NUM_0, LED_ADRS);
-    BUZZER buzzer(BUZZER_CH, BUZZER_TIMER, BUZZER_PIN);
+    BUZZER buzzer(BUZZER_PIN);
     AS5047P enc_R(SPI3_HOST, ENC_CS_R, false);
     AS5047P enc_L(SPI3_HOST, ENC_CS_L, true);
     MPU6500 imu(SPI2_HOST, IMU_CS);
     ADC adc(LED_FR, LED_FL, LED_R, LED_L, VBATT_CHANNEL);
+    NeoPixel neopixel(NEOPIXEL_PIN);
 
     printf("finish module\n");
 
@@ -61,6 +62,15 @@ extern "C" void app_main(void)
 
     // motor.sincurve();
     //buzzer.play();
+    static BUZZER::buzzer_score_t pc98[] = {
+        {2000,100},{1000,100}
+    };
+    buzzer.play_melody(pc98, 2);
+    for(uint32_t i=0;i<360;i++){
+        neopixel.set_hsv({i, 100, 10});
+        vTaskDelay(3 / portTICK_PERIOD_MS);
+    }
+    neopixel.set_hsv({0, 0, 0});
 
     /* ファイルシステムのマウント */
     init_files();
