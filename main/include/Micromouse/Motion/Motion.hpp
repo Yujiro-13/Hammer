@@ -37,6 +37,7 @@ class Motion : public Micromouse
         void offset();
         void offset2();
         void calibrate_wall_th();
+        void fast_straight(uint8_t straight_count);
         
         
     protected:

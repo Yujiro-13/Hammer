@@ -320,7 +320,7 @@ void Motion::stop()
 
     control->flag = FALSE; // 制御OFF
 
-    std::cout << "stop" << std::endl;
+    //std::cout << "stop" << std::endl;
 }
 
 void Motion::back()
@@ -718,7 +718,7 @@ void Motion::offset()
 
     control->flag = FALSE; // 制御OFF
 
-    std::cout << "offset" << std::endl;
+    //std::cout << "offset" << std::endl;
 }
 
 void Motion::calibrate_wall_th()
@@ -799,5 +799,54 @@ void Motion::offset2()
 
     
 
-    std::cout << "offset" << std::endl;
+    //std::cout << "offset" << std::endl;
+}
+
+void Motion::fast_straight(uint8_t straight_count)
+{
+    control->flag = TRUE;       // 制御ON
+    sens->wall.control = TRUE; // 壁制御OFF
+
+    val->I.vel_error = 0.0;
+    val->I.ang_error = 0.0;
+    val->I.wall_error = 0.0;
+
+    val->tar.ang_acc = 0.0;
+    val->tar.ang_vel = 0.0;
+
+    val->tar.len = SECTION*straight_count;
+    val->current.len = 0.0;
+    val->tar.acc = val->max.acc;
+    // val->tar.vel = 0.0;
+
+    while (((val->tar.len - 0.01) - val->current.len) > (((val->tar.vel) * (val->tar.vel)) / (2.0 *
+                                                                                              val->tar.acc)))
+    {
+        vTaskDelay(1 / portTICK_PERIOD_MS);
+    }
+
+    // std::cout << "##### deceleration #####" << std::endl;
+    val->tar.acc = -(val->max.acc);
+
+    while ((val->tar.len - 0.001) > val->current.len)
+    {
+        if (val->tar.vel <= val->min.vel)
+        {
+            val->tar.acc = 0;
+            val->tar.vel = val->min.vel;
+        }
+        vTaskDelay(1 / portTICK_PERIOD_MS);
+    }
+
+    val->tar.acc = 0.0;
+    val->tar.vel = 0.0;
+
+    while (val->current.vel >= 0.0)
+    {
+        vTaskDelay(1 / portTICK_PERIOD_MS);
+    }
+
+    control->flag = FALSE; // 制御OFF
+
+    //std::cout << "stop" << std::endl;
 }

@@ -139,8 +139,8 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
     sens.wall.ref.r = walll_threshold.ref_r;
 
     // ゴール座標
-    map.GOAL_X = 8;
-    map.GOAL_Y = 8;
+    map.GOAL_X = 4;
+    map.GOAL_Y = 4;
 
     printf("finish parameter\n");
     // タスク優先順位 1 ~ 25    25が最高優先度
