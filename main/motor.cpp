@@ -42,11 +42,13 @@ Motor::Motor(gpio_num_t ph_pin_R, gpio_num_t en_pin_R, gpio_num_t ph_pin_L, gpio
 
     mcpwm_timer_handle_t timer = NULL;
     mcpwm_timer_config_t timer_config;
+
     timer_config.group_id = 0,
     timer_config.clk_src = MCPWM_TIMER_CLK_SRC_DEFAULT;
     timer_config.resolution_hz = BDC_MCPWM_TIMER_RESOLUTION_HZ;
     timer_config.period_ticks = BDC_MCPWM_DUTY_TICK_MAX;
     timer_config.count_mode = MCPWM_TIMER_COUNT_MODE_UP;
+    timer_config.intr_priority = 0;
     ESP_ERROR_CHECK(mcpwm_new_timer(&timer_config, &timer));
 
     mcpwm_oper_handle_t oper = NULL;
