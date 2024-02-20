@@ -99,7 +99,7 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
 
     // 速度
     //val.tar.acc = 0.5;
-    val.max.acc = 0.75;
+    val.max.acc = 1.0;
     //val.tar.vel = 0.3;
     val.max.vel = 0.3;
     val.min.vel = 0.03;
