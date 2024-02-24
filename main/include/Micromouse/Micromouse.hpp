@@ -11,6 +11,7 @@
 #include "../Driver/MPU6500.hpp"
 #include "../Driver/PCA9632.hpp"
 #include "../Driver/Motor.hpp"
+#include "../Driver/NeoPixel.hpp"
 //#include "../MIcromouse/interrupt.hpp"
 //#include "../MIcromouse/Motion/adachi.hpp"
 

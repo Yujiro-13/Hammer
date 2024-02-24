@@ -1,5 +1,5 @@
-#ifndef BUZZER_HPP
-#define BUZZER_HPP
+#ifndef NEOPIXEL_HPP
+#define NEOPIXEL_HPP
 
 #include <cstring>
 #include "freertos/FreeRTOS.h"
@@ -9,38 +9,42 @@
 #include <iostream>
 #include "driver/rmt_encoder.h"
 #include "driver/rmt_tx.h"
+#include "driver/gpio.h"
 
-class BUZZER{
+class NeoPixel{
     public:
         typedef struct{
-            uint32_t freq_hz;
-            uint32_t duration_ms;
-        } buzzer_score_t;
-
-        BUZZER(gpio_num_t);
-        ~BUZZER();
-        void play(uint32_t = 1000, uint32_t = 1000);
-        void play_melody(buzzer_score_t*, int len);
+            uint32_t h;
+            uint32_t s;
+            uint32_t v;
+        } hsv_t;
+        NeoPixel(gpio_num_t);
+        ~NeoPixel();
+        void set_hsv(hsv_t);
 
     private:
-        const char *TAG = "BUZZER";
-        const uint32_t RMT_RESOLUTION = 1000000;
+        const char *TAG = "NeoPixel";
+        const uint32_t RMT_RESOLUTION = 10000000;
 
         typedef struct{
             rmt_encoder_t base;
+            rmt_encoder_t *bytes_encoder;
             rmt_encoder_t *copy_encoder;
-            uint32_t resolution;
-        } buzzer_score_encoder_t;
+            int state;
+            rmt_symbol_word_t reset_code;
+        } neopixel_encoder_t;
 
-
-        rmt_channel_handle_t buzzer_ch = NULL;
-        rmt_encoder_handle_t buzzer_enc = NULL;
+        rmt_channel_handle_t neopixel_ch = NULL;
+        rmt_encoder_handle_t neopixel_enc = NULL;
         rmt_copy_encoder_config_t copy_enc = {};
+        rmt_transmit_config_t tx_config = {};
 
         esp_err_t encoder_rmt_create();
         static size_t encoder_rmt(rmt_encoder_t *encoder, rmt_channel_handle_t channel, const void *primary_data, size_t data_size, rmt_encode_state_t *ret_state);
         static esp_err_t encoder_delete(rmt_encoder_t *encoder);
         static esp_err_t encoder_reset(rmt_encoder_t *encoder);
+
+        void hsv2grb(hsv_t,uint8_t*);
 };
 
 #endif
