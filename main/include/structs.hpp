@@ -1,5 +1,7 @@
 #ifndef STRUCTS_HPP
 #define STRUCTS_HPP
+#include <stdint.h>
+#include <freertos/FreeRTOS.h>
 
 
 /* 
@@ -269,6 +271,12 @@ typedef struct
     uint16_t rear_fl = 0;
     uint16_t rear_fr = 0;
 }t_file_center_sens_value;
+
+struct log_data{
+    TickType_t tickstamp;
+    uint16_t wall[4];
+    float voltage;
+};
 
 
 #endif // STRUCTS_HPP

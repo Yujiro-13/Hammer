@@ -11,7 +11,9 @@ void Log::ptr_by_control(t_control *_control) { control = _control; }
 
 void Log::ptr_by_map(t_map *_map) { map = _map; }
 
-void Log::set_device(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot) {}
+void Log::set_device(ADC &_adc, AS5047P &_encR, AS5047P &_encL, BUZZER &_buz, MPU6500 &_imu, PCA9632 &_led, Motor &_mot) {
+    led = &_led;
+}
 
 void Log::ref_by_motion(Adachi &_adachi) {}
 
@@ -25,22 +27,25 @@ void Log::log_print()
     }
 
     uint32_t mem_offset = 0;
-    int16_t data[10];
+    log_data dump;
+    float progress = 0.0;
 
     while (1)
     {
-        esp_partition_read(partition, mem_offset, data, sizeof(data));
-        if (data[4] == -1)
+        esp_partition_read(partition, mem_offset, &dump, sizeof(dump));
+        char *p = (char *)&dump;
+        for (int i = 0; i < sizeof(dump); i++)
         {
-            break;
+            printf("%c", p[i]);
         }
-        printf("%4d,%4d,%4d,%4d,%4d,", data[0], data[1], data[2], data[3], data[4]);
-        printf("%1d,%1d,%1d,%1d,%1d\n", data[5], data[6], data[7], data[8], data[9]);
-        mem_offset += sizeof(data);
+
+        mem_offset += sizeof(dump);
         if (mem_offset >= partition->size)
         {
             break;
         }
+        progress = (float)mem_offset / (float)partition->size;
+        led->set((uint8_t)(progress*16.));
     }
     // printf("\n");
     //  std::cout << "Log" << std::endl;
@@ -76,6 +81,7 @@ void Log1::log_print()
     uint32_t mem_offset = 0;
     int16_t data[10];
 
+    std::cout << "Log" << std::endl;
     while (1)
     {
         esp_partition_read(partition, mem_offset, data, sizeof(data));
@@ -85,6 +91,7 @@ void Log1::log_print()
         }
         printf("%4d,%4d,%4d,%4d,%4d,", data[0], data[1], data[2], data[3], data[4]);
         printf("%1d,%1d,%1d,%1d\n", data[5], data[6], data[7], data[8]);
+
         mem_offset += sizeof(data);
         if (mem_offset >= partition->size)
         {

@@ -287,14 +287,17 @@ void Interrupt::logging()
         vTaskDelete(NULL);
     }
 
+    /*
     err = esp_partition_erase_range(partition, 0, partition->size);
     if (err != ESP_OK)
     {
         ESP_LOGE("logging", "erase error");
         vTaskDelete(NULL);
     }
+    */
+
     uint32_t mem_offset = 0;
-    int16_t adcs[10];
+    log_data logs;
 
     ESP_LOGI("logging", "start logging");
 
@@ -303,17 +306,13 @@ void Interrupt::logging()
         //if (control->log_flag == TRUE)
         //{
             xSemaphoreTake(*on_logging, portMAX_DELAY); // セマフォが取得できるまで無制限に待機 （他タスクによって解放されるまでブロックされる）
-            adcs[0] = sens->wall.val.fl;
-            adcs[1] = sens->wall.val.l;
-            adcs[2] = sens->wall.val.r;
-            adcs[3] = sens->wall.val.fr;
-            adcs[4] = (uint16_t)(sens->BatteryVoltage * 1000);
-            adcs[5] = (int16_t)(val->current.vel * 1000);
-            adcs[6] = (int16_t)(val->tar.vel * 1000);
-            adcs[7] = (int16_t)(val->sum.len * 1000);
-            adcs[8] = (int16_t)(val->current.ang_vel * 1000);
-            adcs[9] = (int16_t)(val->tar.ang_vel* 1000);
-            err = esp_partition_write(partition, mem_offset, adcs, sizeof(adcs));
+            logs.tickstamp = xTaskGetTickCount();
+            logs.wall[0] = sens->wall.val.fl;
+            logs.wall[1] = sens->wall.val.l;
+            logs.wall[2] = sens->wall.val.r;
+            logs.wall[3] = sens->wall.val.fr;
+            logs.voltage = sens->BatteryVoltage;
+            err = esp_partition_write(partition, mem_offset, &logs, sizeof(logs));
             if (err != ESP_OK)
             {
                 ESP_LOGE("logging", "write error");
@@ -321,10 +320,10 @@ void Interrupt::logging()
 
                 break;
             }
-            mem_offset += sizeof(adcs);
-            if (mem_offset >= partition->size)
-                break;
-
+            mem_offset += sizeof(logs);
+            if (mem_offset >= partition->size){
+                mem_offset = 0;
+            }
             
         //}
         //vTaskDelay(1 / portTICK_PERIOD_MS);

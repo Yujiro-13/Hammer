@@ -13,6 +13,7 @@
 #include "esp_vfs_fat.h"
 #include "esp_system.h"
 #include "UI.hpp"
+#include "driver/uart.h"
 
 class Log : public UI
 {
@@ -25,6 +26,9 @@ class Log : public UI
         void main_task() override;
         void ref_by_motion(Adachi &_adachi) override;
         void log_print();
+    protected:
+        PCA9632 *led;
+        
     private:
         t_sens_data *sens;    
         t_mouse_motion_val *val;
