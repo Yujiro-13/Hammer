@@ -8,12 +8,21 @@
 #include <functional>
 
 std::vector<std::shared_ptr<UI>> ui;
+struct peripheral{
+    ADC *adc;
+    AS5047P *encR;
+    AS5047P *encL;
+    BUZZER *buzzer;
+    MPU6500 *imu;
+    PCA9632 *led;
+    Motor *motor;
+};
 
 void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU6500 &imu, PCA9632 &led, Motor &motor);
 void set_interface();
 void call_task(UI *task, Adachi &motion);
 void set_param(Micromouse *task, t_sens_data *_sen, t_mouse_motion_val *_val, t_control *_control, t_map *_map);
-void mode_select(uint8_t *_mode_num, Adachi &adachi, t_sens_data *sens, t_mouse_motion_val *val, t_control *control, t_map *map);
+void mode_select(uint8_t *_mode_num, Adachi &adachi, t_sens_data *sens, t_mouse_motion_val *val, t_control *control, t_map *map, peripheral *periph);
 
 void myTaskInterrupt(void *pvpram)
 {
@@ -74,6 +83,16 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
     motion.ptr_by_control(&control);
     motion.ptr_by_map(&map);
     motion.GetSemphrHandle(&on_logging);
+
+    //ペリフェラルまとめる
+    peripheral periph;
+    periph.adc = &adc;
+    periph.encR = &enc_R;
+    periph.encL = &enc_L;
+    periph.buzzer = &buzzer;
+    periph.imu = &imu;
+    periph.led = &led;
+    periph.motor = &motor;
 
     printf("finish motion struct\n");
 
@@ -157,7 +176,7 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
     printf("Task execution statistics:\n%s", buffer);*/
 
     uint8_t mode = 0;
-    const int MODE_MAX = 0b1111;
+    const int MODE_MAX = 0b1111 - 1;
     const int MODE_MIN = 0;
 
     /* メインループ */
@@ -174,7 +193,7 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
 
             led.set(0b1111);
             sens.gyro.ref = imu.surveybias(2000);
-            mode_select(&mode, motion, &sens, &val, &control, &map);
+            mode_select(&mode, motion, &sens, &val, &control, &map, &periph);
             control.flag = FALSE;
         }
 
@@ -188,7 +207,12 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
             {
                 mode++;
             }
-            vTaskDelay(pdMS_TO_TICKS(500));
+            motor.setMotorSpeed(0.6, 0.6,0);
+            vTaskDelay(pdMS_TO_TICKS(250));
+            motor.setMotorSpeed(-0.6, -0.6,0);
+            vTaskDelay(pdMS_TO_TICKS(250));
+            motor.setMotorSpeed(0, 0,0);
+            ESP_LOGE("mode", "mode:%d", mode);
         }
         if (val.current.vel < -0.04)
         {
@@ -200,7 +224,12 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
             {
                 mode--;
             }
-            vTaskDelay(pdMS_TO_TICKS(500));
+            motor.setMotorSpeed(0.6, 0.6,0);
+            vTaskDelay(pdMS_TO_TICKS(250));
+            motor.setMotorSpeed(-0.6, -0.6,0);
+            vTaskDelay(pdMS_TO_TICKS(250));
+            motor.setMotorSpeed(0, 0,0);
+            ESP_LOGE("mode", "mode:%d", mode);
         }
         //printf("time:%d\n", control.time_count);
         //printf("vel:%f\n", val.current.vel);
@@ -235,9 +264,10 @@ void set_interface()
     //std::cout << "set_interface" << std::endl;
 }
 
-void call_task(UI *task, Adachi &motion)
+void call_task(UI *task, Adachi &motion, peripheral *periph)
 {
     task->ref_by_motion(motion);
+    task->set_device(*periph->adc, *periph->encR, *periph->encL, *periph->buzzer, *periph->imu, *periph->led, *periph->motor);
     task->main_task();
     //std::cout << "call_task" << std::endl;
 }
@@ -251,10 +281,10 @@ void set_param(Micromouse *task, t_sens_data *_sen, t_mouse_motion_val *_val, t_
     //std::cout << "set_param" << std::endl;
 }
 
-void mode_select(uint8_t *_mode_num, Adachi &adachi, t_sens_data *sens, t_mouse_motion_val *val, t_control *control, t_map *map)
+void mode_select(uint8_t *_mode_num, Adachi &adachi, t_sens_data *sens, t_mouse_motion_val *val, t_control *control, t_map *map, peripheral *periph)
 {
     set_interface();
     set_param(ui[*_mode_num].get(), sens, val, control, map);
-    call_task(ui[*_mode_num].get(), adachi);
+    call_task(ui[*_mode_num].get(), adachi, periph);
     //std::cout << "mode_select" << std::endl;
 }

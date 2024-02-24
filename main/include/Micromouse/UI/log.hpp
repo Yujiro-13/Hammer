@@ -1,6 +1,12 @@
 #ifndef LOG_HPP
 #define LOG_HPP
 
+#include <iostream>
+#include <freertos/FreeRTOS.h>
+#include <freertos/semphr.h>    // freertos以下のファイルをインクルードしたい場合、必ず先にFreeRTOS.hをインクルードする
+#include "../Micromouse.hpp"
+#include "include/files.hpp"
+
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -14,6 +20,7 @@
 #include "esp_system.h"
 #include "UI.hpp"
 #include "driver/uart.h"
+#include "../Micromouse.hpp"
 
 class Log : public UI
 {
