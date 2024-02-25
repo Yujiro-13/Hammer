@@ -212,7 +212,6 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
             motor.setMotorSpeed(-0.6, -0.6,0);
             vTaskDelay(pdMS_TO_TICKS(250));
             motor.setMotorSpeed(0, 0,0);
-            ESP_LOGE("mode", "mode:%d", mode);
         }
         if (val.current.vel < -0.04)
         {
@@ -229,7 +228,6 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
             motor.setMotorSpeed(-0.6, -0.6,0);
             vTaskDelay(pdMS_TO_TICKS(250));
             motor.setMotorSpeed(0, 0,0);
-            ESP_LOGE("mode", "mode:%d", mode);
         }
         //printf("time:%d\n", control.time_count);
         //printf("vel:%f\n", val.current.vel);

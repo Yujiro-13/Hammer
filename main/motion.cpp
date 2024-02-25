@@ -373,11 +373,6 @@ void Motion::back()
     std::cout << "back" << std::endl;
 }
 
-void Motion::slalom()
-{
-    std::cout << "slalom" << std::endl;
-}
-
 void Motion::check_enkaigei()
 {
     sens->wall.control = FALSE;
@@ -849,4 +844,64 @@ void Motion::fast_straight(uint8_t straight_count)
     control->flag = FALSE; // 制御OFF
 
     //std::cout << "stop" << std::endl;
+}
+
+void Motion::slalom(float rad){
+    float BUFFER = 0.005;
+
+    control->flag = TRUE;       // 制御ON
+    sens->wall.control = TRUE; // 壁制御OFF
+
+    local_rad = val->current.rad; // 現在の角度を保存
+
+    val->I.vel_error = 0.0;
+    val->I.ang_error = 0.0;
+    val->I.wall_error = 0.0;
+
+    val->tar.ang_acc = 0.0;
+    val->tar.ang_vel = 0.0;
+
+    float _direction = 1;
+    if(rad < 0.0){
+        val->current.flag = RIGHT;  // 右旋回
+        _direction = 1;
+    }else{
+        val->current.flag = LEFT;   // 左旋回
+        _direction = -1;
+    }
+
+    val->tar.rad = TURN_HALF;
+    val->tar.acc = val->max.acc;
+
+    val->current.len = 0.0;
+
+    while(val->current.vel < BUFFER){       //ターン前バッファ
+        vTaskDelay(1 / portTICK_PERIOD_MS);
+    }
+
+    //ターン加速
+    val->tar.ang_acc = val->max.ang_acc * _direction;
+
+    //ターン惰性
+    val->tar.ang_acc = 0.0;
+    while(val->current.rad)
+
+    //ターン減速
+    while ((val->tar.rad) > (val->current.rad - local_rad) * _direction)
+    {
+        if (val->tar.ang_vel > -(val->min.ang_vel))
+        {
+            val->tar.ang_acc = 0;
+            val->tar.ang_vel = -(val->min.ang_vel);
+        }
+
+        vTaskDelay(1);
+    }
+    val->tar.ang_vel = 0.0;
+
+    while(val->current.vel < BUFFER){       //ターン後バッファ
+        vTaskDelay(1);
+    }
+
+    control->flag = FALSE; // 制御OFF
 }

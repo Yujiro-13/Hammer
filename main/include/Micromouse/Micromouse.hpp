@@ -15,10 +15,6 @@
 //#include "../MIcromouse/interrupt.hpp"
 //#include "../MIcromouse/Motion/adachi.hpp"
 
-
-
-
-
 #define Interface struct
 
 Interface Micromouse

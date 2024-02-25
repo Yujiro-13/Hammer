@@ -25,10 +25,15 @@ class Motion : public Micromouse
         void turn_half();
         void stop();
         void back();
-        void slalom();
         void check_enkaigei();
         void turn_left_2();
         void turn_right_2();
+        void slalom_right(){
+            slalom(M_PI_4);
+        }
+        void slalom_left(){
+            slalom(-M_PI_4);
+        }
         void wall_check();
         void adjust_pid(const char* gain, float *pid, float step, uint8_t mode_num);
         void set_pid_gain();
@@ -56,6 +61,7 @@ class Motion : public Micromouse
         Motor *mot;
 
     private:
+        void slalom(float rad);
         uint8_t len_count = 0;
         float local_rad = 0.0;
         
