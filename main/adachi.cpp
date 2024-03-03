@@ -356,6 +356,7 @@ void Adachi::search_adachi(int gx, int gy)
 	//if ((map->pos.x == 0) && (map->pos.y == 0))
 	//{
 		offset2();
+		init_position();
 	//}
 
 	switch (get_nextdir(gx, gy, MASK_SEARCH, &glob_nextdir)) // 次に行く方向を戻り値とする関数を呼ぶ

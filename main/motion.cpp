@@ -905,3 +905,9 @@ void Motion::slalom(float rad){
 
     control->flag = FALSE; // 制御OFF
 }
+
+void Motion::init_position(){
+    val->current.x = SECTION_HALF;
+    val->current.y = SECTION_HALF;
+    return;
+}

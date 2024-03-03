@@ -146,6 +146,8 @@ typedef struct
     float wall_val = 0; //wall value
     float wall_error = 0;   //wall error
     float alpha = 0;    //相補フィルタ用
+    float x = 0;    //x position
+    float y = 0;    //y position
     t_local_dir flag;
 }t_motion;  //motion parameter
 
@@ -163,6 +165,7 @@ typedef struct
     t_motion tar;   //target
     t_motion sum;   //sum
     t_motion I;    //integral
+
 }t_mouse_motion_val;    //motion value
 
 typedef struct 
@@ -278,6 +281,10 @@ struct log_data{
     TickType_t tickstamp;
     uint16_t wall[4];
     float voltage;
+    float x;
+    float y;
+    float vel;
+    float rad;
 };
 
 

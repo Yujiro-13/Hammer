@@ -44,7 +44,9 @@ class NeoPixel{
         static esp_err_t encoder_delete(rmt_encoder_t *encoder);
         static esp_err_t encoder_reset(rmt_encoder_t *encoder);
 
-        void hsv2grb(hsv_t,uint8_t*);
+        uint8_t grb[4] = {0,0,0,0};
+
+        void hsv2grb(hsv_t);
 };
 
 #endif

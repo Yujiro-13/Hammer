@@ -312,6 +312,10 @@ void Interrupt::logging()
             logs.wall[2] = sens->wall.val.r;
             logs.wall[3] = sens->wall.val.fr;
             logs.voltage = sens->BatteryVoltage;
+            logs.x = val->current.x;
+            logs.y = val->current.y;
+            logs.vel = val->current.vel;
+            logs.rad = val->current.rad;
             err = esp_partition_write(partition, mem_offset, &logs, sizeof(logs));
             if (err != ESP_OK)
             {
@@ -344,6 +348,13 @@ void Interrupt::reset_I_gain()
 float Interrupt::calc_target_accel()
 {
     return ((val->end.vel)* (val->end.vel) - (val->current.vel) * (val->current.vel)) / (2.0 * val->tar.len);
+}
+
+void Interrupt::calc_position()
+{
+    val->current.x += val->current.vel * cos(val->current.rad) / 1000.0;
+    val->current.y += val->current.vel * sin(val->current.rad) / 1000.0;
+    return;
 }
 
 void Interrupt::interrupt()

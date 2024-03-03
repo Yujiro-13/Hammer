@@ -5,9 +5,9 @@ NeoPixel::NeoPixel(gpio_num_t pin){
     memset(&_tx_config, 0, sizeof(_tx_config));
     _tx_config.clk_src = RMT_CLK_SRC_DEFAULT;
     _tx_config.gpio_num = pin;
-    _tx_config.mem_block_symbols = 64;
+    _tx_config.mem_block_symbols = 48;
     _tx_config.resolution_hz = RMT_RESOLUTION;
-    _tx_config.trans_queue_depth = 2;
+    _tx_config.trans_queue_depth = 1;
 
     this->tx_config.loop_count = 0;
 
@@ -15,12 +15,6 @@ NeoPixel::NeoPixel(gpio_num_t pin){
     ESP_ERROR_CHECK(encoder_rmt_create());
     ESP_ERROR_CHECK(rmt_enable(neopixel_ch));
 
-    uint8_t zero[3] = {0,0,0};
-
-    for(int i = 0; i < 10; i++){
-        ESP_ERROR_CHECK(rmt_transmit(this->neopixel_ch,this->neopixel_enc,zero,3,&this->tx_config));
-        ESP_ERROR_CHECK(rmt_tx_wait_all_done(this->neopixel_ch, portMAX_DELAY));
-    }
 }
 
 NeoPixel::~NeoPixel(){
@@ -29,9 +23,7 @@ NeoPixel::~NeoPixel(){
 }
 
 void NeoPixel::set_hsv(hsv_t hsv){
-    ESP_ERROR_CHECK(rmt_tx_wait_all_done(this->neopixel_ch, portMAX_DELAY));
-    uint8_t grb[3];
-    hsv2grb(hsv,grb);
+    hsv2grb(hsv);
     ESP_ERROR_CHECK(rmt_transmit(this->neopixel_ch,this->neopixel_enc,grb,3,&this->tx_config));
     ESP_ERROR_CHECK(rmt_tx_wait_all_done(this->neopixel_ch, portMAX_DELAY));
 }
@@ -137,7 +129,7 @@ esp_err_t NeoPixel::encoder_reset(rmt_encoder_t *encoder){
     return ESP_OK;
 }
 
-void NeoPixel::hsv2grb(hsv_t hsv, uint8_t* grb){
+void NeoPixel::hsv2grb(hsv_t hsv){
     uint32_t h = hsv.h;
     uint32_t s = hsv.s;
     uint32_t v = hsv.v;

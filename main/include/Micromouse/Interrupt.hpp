@@ -33,6 +33,7 @@ class Interrupt : public Micromouse{
         void feedback_control();
         void calc_distance();
         void calc_angle();
+        void calc_position();
         float calc_target_accel();
         t_sens_data *sens;
         t_mouse_motion_val *val;
