@@ -357,8 +357,8 @@ t_map map_read()
     else
     {
         ESP_LOGI(MAP_FILE_TAG, "read file");
-        ifile.read(reinterpret_cast<char *>(&map), sizeof(t_map));  // ここでスタックオーバーフロー
-
+        ifile.read(reinterpret_cast<char *>(&map), sizeof(t_map));  // ここでスタックオーバーフロー 追記:原因忘れた 確か最短走行の前に呼び出そうとすると起きてた気がする
+                                                                    // 追記2:多分 呼び出す箇所でInitMazeが正しく呼べていなかったことが原因。詳しくは、fast.cppのコメント参照
         ifile.close();
 
         ESP_LOGI(MAP_FILE_TAG, "read file wall north : %d", map.wall[0][0].north);
