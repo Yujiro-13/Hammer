@@ -45,7 +45,7 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
     t_control control;
     t_map map;
     t_file_pid_gain pid_gain;
-    t_file_wall_th walll_threshold;
+    t_file_wall_th wall_threshold;
     t_file_center_sens_value center_sens_val;
 
     printf("finish struct\n");
@@ -87,7 +87,7 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
 
     /* パラメータの設定 */
     pid_gain = read_file_pid();
-    walll_threshold = read_file_wall_th();
+    wall_threshold = read_file_wall_th();
     center_sens_val = read_file_center_sens_val();
 
     // 距離
@@ -129,14 +129,14 @@ void MICROMOUSE(ADC &adc, AS5047P &enc_R, AS5047P &enc_L, BUZZER &buzzer, MPU650
     control.wall.Kd = pid_gain.wall_Kd;
 
     // 壁センサ閾値
-    sens.wall.th_wall.fl = walll_threshold.th_wall_fl;
-    sens.wall.th_wall.fr = walll_threshold.th_wall_fr;
-    sens.wall.th_wall.l = walll_threshold.th_wall_l;
-    sens.wall.th_wall.r = walll_threshold.th_wall_r;
-    sens.wall.th_control.l = walll_threshold.th_control_l;
-    sens.wall.th_control.r = walll_threshold.th_control_r;
-    sens.wall.ref.l = walll_threshold.ref_l;
-    sens.wall.ref.r = walll_threshold.ref_r;
+    sens.wall.th_wall.fl = wall_threshold.th_wall_fl;
+    sens.wall.th_wall.fr = wall_threshold.th_wall_fr;
+    sens.wall.th_wall.l = wall_threshold.th_wall_l;
+    sens.wall.th_wall.r = wall_threshold.th_wall_r;
+    sens.wall.th_control.l = wall_threshold.th_control_l;
+    sens.wall.th_control.r = wall_threshold.th_control_r;
+    sens.wall.ref.l = wall_threshold.ref_l;
+    sens.wall.ref.r = wall_threshold.ref_r;
 
     // ゴール座標
     map.GOAL_X = 4;

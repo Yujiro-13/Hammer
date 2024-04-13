@@ -37,7 +37,18 @@ void Test2::ref_by_motion(Adachi &_adachi) { motion = _adachi; }
 void Test2::main_task()
 {
     control->log_flag = TRUE;
+    val->sum.len = 0.0;
+    motion.run_half();
     motion.run();
+    /*motion.run();
+    motion.run();
+    motion.run();
+    motion.run();
+    motion.run();
+    motion.run();
+    motion.run();
+    motion.run();*/
+    motion.stop();  // OK
     control->log_flag = FALSE;
     std::cout << "Test2" << std::endl;
 }
@@ -96,8 +107,8 @@ void Test5::ref_by_motion(Adachi &_adachi) { motion = _adachi; }
 
 void Test5::main_task()
 {   
-    motion.set_pid_gain();
-    motion.set_wall_threshold();
+    motion.set_pid_gain(); // ok
+    motion.set_wall_threshold(); // ok
     std::cout << "Test" << std::endl;
 }
 

@@ -207,5 +207,5 @@ void Log1::main_task()
 {
     // log_print();
     map_print();
-    std::cout << "Log1" << std::endl;
+    //std::cout << "Log1" << std::endl;
 }
