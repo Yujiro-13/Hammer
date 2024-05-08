@@ -32,7 +32,6 @@ private:
     IRLED_R led_R;
     IRLED_L led_L;
 
-    t_sensing_result *result;
     t_sens_data *sens;
     
 };

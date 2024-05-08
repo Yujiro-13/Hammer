@@ -109,26 +109,6 @@ typedef struct
     float BatteryVoltage = 0;
 }t_sens_data;   //sensor data
 
-typedef struct
-{
-    float accelX = 0;
-    float accelY = 0;
-    float accelZ = 0;
-    float gyroX = 0;
-    float gyroY = 0;
-    float gyroZ = 0;
-    uint16_t Angle = 0;
-    uint16_t Angle_R = 0;
-    uint16_t Angle_L = 0;
-    float BatteryVoltage = 0;
-    int sens_r_value = 0;
-    int sens_l_value = 0;
-    int sens_fr_value = 0;
-    int sens_fl_value = 0;
-}t_sensing_result;
-
-
-
 typedef struct 
 {
     float vel = 0;  //velocity
